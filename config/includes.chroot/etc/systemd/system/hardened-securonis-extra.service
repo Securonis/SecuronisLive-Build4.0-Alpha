@@ -5,7 +5,7 @@ ConditionPathExists=!/var/lib/securonis-hardening-done
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/securonis-hardening-apply.sh
+ExecStart=/usr/bin/hardened-securonis-extra
 RemainAfterExit=yes
 
 [Install]
