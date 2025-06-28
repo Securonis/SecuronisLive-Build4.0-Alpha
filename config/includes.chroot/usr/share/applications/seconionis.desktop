@@ -2,7 +2,7 @@
 Version=1.0
 Name=Seconionis
 Comment=Tor Traffic Router for Securonis Linux
-Exec=pkexec seconionisgui
+Exec=pkexec seconionismenu
 Icon=/usr/share/icons/securonis/icon15.png
 Terminal=false
 Type=Application

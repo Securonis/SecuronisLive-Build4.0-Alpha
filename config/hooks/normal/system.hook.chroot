@@ -14,7 +14,7 @@ systemctl enable securonis-anti-ipspoof.service
 
 systemctl enable hardened-securonis-extra.service
 
-systemctl enable jason-tor.service
+systemctl enable seconionis-autostart.service
 
 # Network security services
 systemctl enable root0-network-ipv4-icmp.service
