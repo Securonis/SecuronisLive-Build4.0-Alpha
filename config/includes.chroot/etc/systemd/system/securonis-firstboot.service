@@ -1,0 +1,11 @@
+[Unit]
+Description=Securonis First Boot Settings
+DefaultDependencies=no
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/firstboot
+
+[Install]
+WantedBy=multi-user.target

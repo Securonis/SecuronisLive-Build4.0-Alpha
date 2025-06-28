@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - Enable core dumps with PID
+DefaultDependencies=no
+Before=sysinit.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w kernel.core_uses_pid=1
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

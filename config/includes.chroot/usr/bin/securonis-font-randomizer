@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Create a directory for the font settings if it doesn't exist
+mkdir -p /etc/securonis/fonts
+
+# Function to randomize font information for browsers
+randomize_font_info() {
+    # Sabit bir değer kullanarak performansı artırıyoruz
+    # 1 = minimal koruma, 2 = orta seviye koruma, 3 = maksimum koruma
+    # Performans için 2 kullanıyoruz
+    FONT_NOISE_LEVEL=2
+    
+    # Save the font noise level to a file
+    echo "FONT_NOISE_LEVEL=$FONT_NOISE_LEVEL" > /etc/securonis/fonts/settings
+    
+    # Create Firefox override if Firefox directory exists
+    if [ -d /etc/firefox/pref ]; then
+        mkdir -p /etc/firefox/pref
+        echo 'pref("privacy.resistFingerprinting", true);' > /etc/firefox/pref/font-settings.js
+        echo 'pref("layout.css.font-visibility.level", '$FONT_NOISE_LEVEL');' >> /etc/firefox/pref/font-settings.js
+    fi
+    
+    # Create Chrome override if Chrome directory exists
+    if [ -d /etc/opt/chrome/policies/managed ]; then
+        mkdir -p /etc/opt/chrome/policies/managed
+        # Font boyutunu sadece 1 piksel değiştirerek kullanıcı deneyimini koruyoruz
+        echo '{
+  "DefaultFontSize": 16
+}' > /etc/opt/chrome/policies/managed/font.json
+    fi
+    
+    # Sleep for a random period between 12-24 hours before changing again
+    # Daha uzun süre bekleyerek sistem yükünü azaltıyoruz
+    sleep $((RANDOM % 43200 + 43200))
+}
+
+# Main loop to continuously randomize font information
+while true; do
+    randomize_font_info
+done

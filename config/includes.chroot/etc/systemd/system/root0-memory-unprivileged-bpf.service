@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - Restrict unprivileged BPF
+DefaultDependencies=no
+Before=sysinit.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w kernel.unprivileged_bpf_disabled=1
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

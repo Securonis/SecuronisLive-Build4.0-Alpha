@@ -1,0 +1,15 @@
+[Unit]
+Description=Securonis - Master Cleanup Service on Shutdown
+DefaultDependencies=no
+Before=shutdown.target reboot.target halt.target
+Conflicts=reboot.target
+Wants=securonis-cleanup-browser.service securonis-cleanup-logs.service securonis-cleanup-temp.service securonis-cleanup-bash-history.service securonis-cleanup-swap.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/securonis-cleanup-master
+TimeoutStartSec=10
+RemainAfterExit=no
+
+[Install]
+WantedBy=shutdown.target

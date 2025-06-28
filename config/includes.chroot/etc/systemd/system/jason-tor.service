@@ -1,0 +1,14 @@
+[Unit]
+Description=All traffic was redirected through Tor - You are under Jason tunnel 
+Before=poweroff.target reboot.target tor.service
+After=network.target
+Wants=tor.service
+
+[Service]
+ExecStart=/usr/bin/jason start
+ExecReload=/usr/bin/jason restart
+ExecStop=/usr/bin/jason stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - Maximum write buffer size
+DefaultDependencies=no
+Before=network.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w net.core.wmem_max=16777216
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

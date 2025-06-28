@@ -1,0 +1,13 @@
+[Unit]
+Description=Securonis - Cookie Manager and Tracker Prevention
+After=network.target
+DefaultDependencies=no
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/securonis-cookie-manager
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

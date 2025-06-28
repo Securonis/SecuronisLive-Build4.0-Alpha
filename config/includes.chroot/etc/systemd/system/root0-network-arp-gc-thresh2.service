@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - ARP table soft maximum entries threshold
+DefaultDependencies=no
+Before=network.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w net.ipv4.neigh.default.gc_thresh2=1024
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

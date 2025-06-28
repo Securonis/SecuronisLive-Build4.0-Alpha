@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - Enable protected hardlinks
+DefaultDependencies=no
+Before=sysinit.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w fs.protected_hardlinks=1
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

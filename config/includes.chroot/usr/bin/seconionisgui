@@ -1,0 +1,338 @@
+#!/usr/bin/env python3
+import sys
+import subprocess
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
+                           QPushButton, QLabel, QTextEdit, QScrollArea, QHBoxLayout)
+from PyQt5.QtGui import QFont, QPalette, QColor, QPixmap
+from PyQt5.QtCore import Qt, QProcess
+import os
+
+class HackerTheme:
+    BG_COLOR = QColor(0, 0, 0)  # Black
+    TEXT_COLOR = QColor(0, 255, 0)  # Matrix Green
+    BUTTON_BG = QColor(0, 40, 0)  # Dark Green
+    BUTTON_HOVER = QColor(0, 60, 0)  # Slightly Lighter Green
+    FONT_FAMILY = "Courier New"  # Classic hacker font
+
+class SeconionisGUI(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.process = QProcess()
+        self.process.readyReadStandardOutput.connect(self.handle_output)
+        self.process.readyReadStandardError.connect(self.handle_error)
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('Securonis Tor Traffic Router Control Panel')
+        self.setFixedSize(410, 650)
+        
+        # Set window background to black
+        self.setStyleSheet("QMainWindow {background-color: black;}")
+        
+        # Create central widget and layout
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        main_layout = QVBoxLayout(central_widget)
+        main_layout.setSpacing(5)
+        main_layout.setContentsMargins(5, 5, 5, 5)
+        
+        # Üst panel (Logo ve başlık)
+        top_panel = QWidget()
+        top_layout = QVBoxLayout(top_panel)
+        top_layout.setSpacing(5)
+        top_layout.setContentsMargins(5, 5, 5, 5)
+        top_layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        
+        # Logo Label
+        # Get the directory where the script is located
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        logo_path = os.path.join(os.path.dirname(os.path.dirname(script_dir)), 'usr/share/icons/securonis/seconionis.png')
+        if os.path.exists(logo_path):
+            logo_label = QLabel()
+            pixmap = QPixmap(logo_path)
+            scaled_pixmap = pixmap.scaled(100, 100, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+            logo_label.setPixmap(scaled_pixmap)
+            logo_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+            top_layout.addWidget(logo_label)
+        
+     
+        title = QLabel('Seconionis - Tor Traffic Router Control Panel')
+        title.setFont(QFont(HackerTheme.FONT_FAMILY, 10, QFont.Bold))
+        title.setStyleSheet(f"color: {HackerTheme.TEXT_COLOR.name()}; background-color: black;")
+        title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        top_layout.addWidget(title)
+        
+        main_layout.addWidget(top_panel)
+        
+        # Output Display
+        self.output_display = QTextEdit()
+        self.output_display.setReadOnly(True)
+        self.output_display.setFont(QFont(HackerTheme.FONT_FAMILY, 9))
+        self.output_display.setMinimumHeight(200)
+        self.output_display.setMaximumHeight(200)
+        self.output_display.setStyleSheet(f"""
+            QTextEdit {{
+                color: {HackerTheme.TEXT_COLOR.name()};
+                background-color: black;
+                border: 2px solid {HackerTheme.TEXT_COLOR.name()};
+                padding: 5px;
+            }}
+        """)
+        main_layout.addWidget(self.output_display)
+        
+        button_style = f"""
+            QPushButton {{
+                color: {HackerTheme.TEXT_COLOR.name()};
+                background-color: {HackerTheme.BUTTON_BG.name()};
+                border: 2px solid {HackerTheme.TEXT_COLOR.name()};
+                padding: 5px;
+                font-family: {HackerTheme.FONT_FAMILY};
+                font-size: 10px;
+                text-align: left;
+                min-height: 25px;
+                min-width: 180px;
+                max-width: 180px;
+            }}
+            QPushButton:hover {{
+                background-color: {HackerTheme.BUTTON_HOVER.name()};
+            }}
+        """
+        
+
+        button_panel = QWidget()
+        button_panel_layout = QHBoxLayout(button_panel)
+        button_panel_layout.setSpacing(5)
+        button_panel_layout.setContentsMargins(5, 5, 0, 5)
+        
+
+        left_buttons_widget = QWidget()
+        left_buttons_layout = QVBoxLayout(left_buttons_widget)
+        left_buttons_layout.setSpacing(2)
+        left_buttons_layout.setContentsMargins(0, 0, 0, 0)
+        left_buttons_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        
+        # Create buttons
+        left_buttons = [
+            ('Start Tor Routing', lambda: self.run_command('start')),
+            ('Stop Tor Routing', lambda: self.run_command('stop')),
+            ('Change Tor ID', lambda: self.run_command('change')),
+            ('Check Tor Status', self.check_tor_status),
+            ('Check IP', lambda: self.run_command('ip')),
+            ('Help', self.show_help)
+        ]
+        
+        for text, handler in left_buttons:
+            btn = QPushButton(text)
+            btn.setStyleSheet(button_style)
+            btn.clicked.connect(handler)
+            left_buttons_layout.addWidget(btn)
+
+        right_buttons_widget = QWidget()
+        right_buttons_layout = QVBoxLayout(right_buttons_widget)
+        right_buttons_layout.setSpacing(2)
+        right_buttons_layout.setContentsMargins(0, 0, 0, 0)
+        right_buttons_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        
+        # Create buttons
+        right_buttons = [
+            ('Check Tor Routing', lambda: self.run_command('check_tor_routing')),
+            ('Seconionis Status', lambda: self.run_command('jason')),
+            ('Enable Tor Routing Autostart', lambda: self.run_command('enable_autostart')),
+            ('Disable Tor Routing Autostart', lambda: self.run_command('disable_autostart')),
+            ('Enable Seconionis Autowipe', lambda: self.run_command('enable_autowipe')),
+            ('Disable Seconionis Autowipe', lambda: self.run_command('disable_autowipe'))
+        ]
+        
+        for text, handler in right_buttons:
+            btn = QPushButton(text)
+            btn.setStyleSheet(button_style)
+            btn.clicked.connect(handler)
+            right_buttons_layout.addWidget(btn)
+
+        button_panel_layout.addWidget(left_buttons_widget)
+        button_panel_layout.addWidget(right_buttons_widget)
+        button_panel_layout.addStretch(1)  
+        
+ 
+        main_layout.addWidget(button_panel)
+        
+    def run_command(self, command):
+        self.output_display.clear()
+        self.output_display.append(f"Executing command: {command}\n")
+        self.process.start('sudo', ['jason', command])
+        
+    def handle_output(self):
+        output = bytes(self.process.readAllStandardOutput()).decode()
+        self.output_display.append(output)
+        
+    def handle_error(self):
+        error = bytes(self.process.readAllStandardError()).decode()
+        self.output_display.append(f"Error: {error}")
+        
+    def check_tor_status(self):
+        self.output_display.clear()
+        self.process.start('systemctl', ['status', 'tor'])
+        
+    def check_jason_status(self):
+        self.output_display.clear()
+        self.process.start('systemctl', ['status', 'jason-tor'])
+        
+    def enable_tor_autostart(self):
+        self.output_display.clear()
+        self.process.start('sudo', ['systemctl', 'enable', 'jason-tor'])
+        
+    def disable_tor_autostart(self):
+        self.output_display.clear()
+        self.process.start('sudo', ['systemctl', 'disable', 'jason-tor'])
+        
+    def enable_autowipe(self):
+        self.output_display.clear()
+        self.process.start('sudo', ['systemctl', 'enable', 'jason-autowipe'])
+        self.process.waitForFinished()
+        self.process.start('sudo', ['systemctl', 'start', 'jason-autowipe'])
+        
+    def disable_autowipe(self):
+        self.output_display.clear()
+        self.process.start('sudo', ['systemctl', 'stop', 'jason-autowipe'])
+        self.process.waitForFinished()
+        self.process.start('sudo', ['systemctl', 'disable', 'jason-autowipe'])
+        
+    def show_help(self):
+        help_text = """
+===========================================
+            SECONIONIS HELP                  
+===========================================
+Seconionis Tor Traffic Router Control Panel
+Version: 1.0
+Author: root0emir
+
+Seconionis is a privacy and security tool that helps
+protect your digital fingerprint and anonymize
+your internet traffic.
+
+Key Features:
+- Tor Routing: Routes all traffic through the Tor network
+- Autowipe: Automatically wipes RAM to prevent data recovery
+- IP Checking: Verify your anonymization status
+
+Commands Overview:
+- Start/Disable Tor routing: Control Tor routing
+- Change Tor ID: Get a new Tor identity
+- Status checks: Verify services status
+- Autostart settings: Configure system services
+
+This tool is open-source software distributed under
+the terms of the GNU General Public License.
+
+For more details or to report bugs and issues, visit:
+https://github.com/Securonis/SeconionisV2
+===========================================
+"""
+        self.output_display.clear()
+        self.output_display.append(help_text)
+        
+    def show_about(self):
+        about_text = """
+===========================================
+            ABOUT SECONIONIS             
+===========================================
+Seconionis Tor Traffic Router Control Panel
+Version: 1.0
+Author: root0emir
+
+Seconionis is a comprehensive privacy and security tool
+designed to protect your digital fingerprint and
+provide enhanced anonymity while browsing.
+
+This tool is open-source software distributed under
+the terms of the GNU General Public License.
+
+Report bugs and issues at:
+https://github.com/Securonis/SeconionisV2S
+===========================================
+"""
+        self.output_display.clear()
+        self.output_display.append(about_text)
+
+    def check_tor_routing(self):
+        self.output_display.clear()
+        self.output_display.append("Verifying Tor Network Routing...\n\n")
+        
+        try:
+
+            process = QProcess()
+            process.start('curl', ['--silent', 'https://check.torproject.org/api/ip'])
+            process.waitForFinished()
+            output = bytes(process.readAllStandardOutput()).decode()
+            
+         
+            import json
+            result = json.loads(output)
+            is_tor = result.get('IsTor', False)
+            
+            if is_tor:
+                self.output_display.append("""
++-------------------------------------------+
+|        TOR ROUTING STATUS: SUCCESSFUL      |
++-------------------------------------------+
+|   All Traffic Successfully Routed Over Tor |
+|    Your Connection is Secure and Anonymous |
++-------------------------------------------+
+""")
+            else:
+                self.output_display.append("""
++-------------------------------------------+
+|         TOR ROUTING STATUS: FAILED         |
++-------------------------------------------+
+|     Traffic is NOT Being Routed Over Tor   |
+|       Your Connection is Not Secured       |
++-------------------------------------------+
+""")
+        except json.JSONDecodeError:
+         
+            self.output_display.append("""
++-------------------------------------------+
+|        TOR ROUTING STATUS: UNKNOWN         |
++-------------------------------------------+
+|    Unable to Parse Tor Check Response      |
+|      Please Try Again in a Moment          |
++-------------------------------------------+
+""")
+        except Exception as e:
+         
+            self.output_display.append("""
++-------------------------------------------+
+|        TOR ROUTING STATUS: UNKNOWN         |
++-------------------------------------------+
+|    Unable to Connect to Tor Check Site     |
+|      Please Check Your Connection          |
++-------------------------------------------+
+""")
+
+def main():
+    app = QApplication(sys.argv)
+    
+    # Set application-wide dark theme
+    app.setStyle('Fusion')
+    dark_palette = QPalette()
+    dark_palette.setColor(QPalette.Window, HackerTheme.BG_COLOR)
+    dark_palette.setColor(QPalette.WindowText, HackerTheme.TEXT_COLOR)
+    dark_palette.setColor(QPalette.Base, HackerTheme.BG_COLOR)
+    dark_palette.setColor(QPalette.AlternateBase, HackerTheme.BG_COLOR)
+    dark_palette.setColor(QPalette.ToolTipBase, HackerTheme.TEXT_COLOR)
+    dark_palette.setColor(QPalette.ToolTipText, HackerTheme.TEXT_COLOR)
+    dark_palette.setColor(QPalette.Text, HackerTheme.TEXT_COLOR)
+    dark_palette.setColor(QPalette.Button, HackerTheme.BUTTON_BG)
+    dark_palette.setColor(QPalette.ButtonText, HackerTheme.TEXT_COLOR)
+    dark_palette.setColor(QPalette.BrightText, QColor(255, 0, 0))  # Red
+    dark_palette.setColor(QPalette.Link, HackerTheme.TEXT_COLOR)
+    dark_palette.setColor(QPalette.Highlight, HackerTheme.BUTTON_HOVER)
+    dark_palette.setColor(QPalette.HighlightedText, HackerTheme.TEXT_COLOR)
+    app.setPalette(dark_palette)
+    
+    window = SeconionisGUI()
+    window.show()
+    sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    main() 

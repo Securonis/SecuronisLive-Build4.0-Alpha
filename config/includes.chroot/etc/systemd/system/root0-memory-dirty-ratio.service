@@ -1,0 +1,14 @@
+[Unit]
+Description=Root0 - Configure memory dirty ratios
+DefaultDependencies=no
+Before=sysinit.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w vm.dirty_ratio=20
+ExecStart=/usr/sbin/sysctl -w vm.dirty_background_ratio=5
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

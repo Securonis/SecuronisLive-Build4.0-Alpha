@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - ARP table minimum entries threshold
+DefaultDependencies=no
+Before=network.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w net.ipv4.neigh.default.gc_thresh1=32
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

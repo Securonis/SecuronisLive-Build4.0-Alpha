@@ -1,0 +1,14 @@
+[Unit]
+Description=Securonis - Clean SWAP Memory on Shutdown
+DefaultDependencies=no
+Before=shutdown.target reboot.target halt.target
+Conflicts=reboot.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/securonis-cleanup-swap
+TimeoutStartSec=30
+RemainAfterExit=no
+
+[Install]
+WantedBy=shutdown.target

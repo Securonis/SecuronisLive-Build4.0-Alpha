@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# Check if running as root
+if [ "$EUID" -ne 0 ]; then 
+    echo "Please run as root"
+    exit 1
+fi
+
+echo "Disabling Root0 system hardening services..."
+
+# Network security services
+systemctl disable root0-network-ipv4-icmp.service
+systemctl disable root0-network-ipv4-martians.service
+systemctl disable root0-network-ipv4-rp-filter.service
+systemctl disable root0-network-ipv4-accept-redirects.service
+systemctl disable root0-network-ipv4-tcp-timestamps.service
+systemctl disable root0-network-ipv4-tor-routes.service
+systemctl disable root0-network-ipv6-disable.service
+systemctl disable root0-network-ipv4-ignore-broadcasts.service
+systemctl disable root0-network-ipv4-ignore-bogus.service
+systemctl disable root0-network-ipv4-syn-backlog.service
+systemctl disable root0-network-ipv4-synack-retries.service
+systemctl disable root0-network-ipv4-tcp-sack.service
+
+# New TCP optimization services
+systemctl disable root0-network-tcp-rmem.service
+systemctl disable root0-network-tcp-wmem.service
+systemctl disable root0-network-core-rmem-max.service
+systemctl disable root0-network-core-wmem-max.service
+systemctl disable root0-network-tcp-fastopen.service
+systemctl disable root0-network-tcp-rfc1337.service
+systemctl disable root0-network-tcp-window-scaling.service
+
+# Kernel security services
+systemctl disable root0-kernel-dmesg.service
+systemctl disable root0-kernel-kptr.service
+systemctl disable root0-kernel-yama-ptrace.service
+systemctl disable root0-kernel-sysrq.service
+systemctl disable root0-kernel-core-pid.service
+systemctl disable root0-kernel-panic.service
+systemctl disable root0-kernel-perf.service
+systemctl disable root0-kernel-userns.service
+
+# Filesystem security services
+systemctl disable root0-fs-protected-hardlinks.service
+systemctl disable root0-fs-protected-symlinks.service
+systemctl disable root0-fs-suid-dump.service
+
+# TTY settings
+systemctl disable root0-tty-ldisc.service
+
+# Memory security services
+systemctl disable root0-memory-unprivileged-bpf.service
+systemctl disable root0-memory-aslr.service
+systemctl disable root0-memory-mmap-min.service
+systemctl disable root0-memory-swappiness.service
+systemctl disable root0-memory-dirty-ratio.service
+systemctl disable root0-memory-oom.service
+
+# Reset sysctl parameters to default values
+echo "Resetting sysctl parameters to default values..."
+sysctl -p /etc/sysctl.conf
+
+# Reset ARP settings to defaults
+sysctl -w net.ipv4.neigh.default.gc_thresh3=1024
+sysctl -w net.ipv4.neigh.default.gc_thresh2=512
+sysctl -w net.ipv4.neigh.default.gc_thresh1=128
+sysctl -w net.ipv4.neigh.default.gc_interval=30
+sysctl -w net.ipv4.neigh.default.proxy_qlen=64
+sysctl -w net.ipv4.neigh.default.unres_qlen=3
+
+# Disable ARP services
+systemctl disable root0-network-arp-gc-thresh3.service
+systemctl disable root0-network-arp-gc-thresh2.service
+systemctl disable root0-network-arp-gc-thresh1.service
+systemctl disable root0-network-arp-gc-interval.service
+systemctl disable root0-network-arp-proxy-qlen.service
+systemctl disable root0-network-arp-unres-qlen.service
+
+echo "All Root0 services have been disabled!"
+echo "System hardening has been deactivated."
+echo "Changes will take full effect after a system reboot." 

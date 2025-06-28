@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# Create log directory
+mkdir -p /var/log/securonis/cleanup
+
+# Log start
+echo "Starting temporary files cleanup at $(date)" > /var/log/securonis/cleanup/temp_files.log
+
+# Clean /tmp directory
+echo "Cleaning /tmp directory..." >> /var/log/securonis/cleanup/temp_files.log
+find /tmp -type f -delete 2>/dev/null
+find /tmp -type d -empty -delete 2>/dev/null
+
+# Clean /var/tmp directory
+echo "Cleaning /var/tmp directory..." >> /var/log/securonis/cleanup/temp_files.log
+find /var/tmp -type f -delete 2>/dev/null
+find /var/tmp -type d -empty -delete 2>/dev/null
+
+# Clean user cache directories
+echo "Cleaning user cache directories..." >> /var/log/securonis/cleanup/temp_files.log
+for user_home in /home/*; do
+    if [ -d "$user_home/.cache" ]; then
+        echo "Cleaning cache for $user_home" >> /var/log/securonis/cleanup/temp_files.log
+        find "$user_home/.cache" -type f -delete 2>/dev/null
+        find "$user_home/.cache" -type d -empty -delete 2>/dev/null
+    fi
+    
+    # Clean thumbnails
+    if [ -d "$user_home/.thumbnails" ]; then
+        echo "Cleaning thumbnails for $user_home" >> /var/log/securonis/cleanup/temp_files.log
+        find "$user_home/.thumbnails" -type f -delete 2>/dev/null
+    fi
+    
+    # Clean recently-used files
+    if [ -f "$user_home/.local/share/recently-used.xbel" ]; then
+        echo "Cleaning recently-used files for $user_home" >> /var/log/securonis/cleanup/temp_files.log
+        cat /dev/null > "$user_home/.local/share/recently-used.xbel" 2>/dev/null
+    fi
+done
+
+# Clean system cache
+echo "Cleaning system cache..." >> /var/log/securonis/cleanup/temp_files.log
+if [ -d "/var/cache/apt" ]; then
+    echo "Cleaning APT cache" >> /var/log/securonis/cleanup/temp_files.log
+    rm -rf /var/cache/apt/archives/*.deb 2>/dev/null
+fi
+
+# Log completion
+echo "Temporary files cleanup completed at $(date)" >> /var/log/securonis/cleanup/temp_files.log
+
+exit 0

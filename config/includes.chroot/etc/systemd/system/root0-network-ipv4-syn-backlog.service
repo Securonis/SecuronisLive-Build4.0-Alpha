@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - Set TCP SYN backlog size
+DefaultDependencies=no
+Before=network.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w net.ipv4.tcp_max_syn_backlog=2048
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

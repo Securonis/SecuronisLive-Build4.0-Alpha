@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - Enable TCP Fast Open
+DefaultDependencies=no
+Before=network.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w net.ipv4.tcp_fastopen=3
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

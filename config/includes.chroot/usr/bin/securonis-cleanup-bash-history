@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Create log directory
+mkdir -p /var/log/securonis/cleanup
+
+# Log start
+echo "Starting bash history cleanup at $(date)" > /var/log/securonis/cleanup/bash_history.log
+
+# Clean bash history for all users
+echo "Cleaning bash history for all users..." >> /var/log/securonis/cleanup/bash_history.log
+
+# Clean root bash history
+if [ -f "/root/.bash_history" ]; then
+    echo "Cleaning root bash history" >> /var/log/securonis/cleanup/bash_history.log
+    cat /dev/null > /root/.bash_history 2>/dev/null
+fi
+
+# Clean user bash histories
+for user_home in /home/*; do
+    if [ -f "$user_home/.bash_history" ]; then
+        echo "Cleaning bash history for $(basename "$user_home")" >> /var/log/securonis/cleanup/bash_history.log
+        cat /dev/null > "$user_home/.bash_history" 2>/dev/null
+    fi
+    
+    # Clean zsh history if exists
+    if [ -f "$user_home/.zsh_history" ]; then
+        echo "Cleaning zsh history for $(basename "$user_home")" >> /var/log/securonis/cleanup/bash_history.log
+        cat /dev/null > "$user_home/.zsh_history" 2>/dev/null
+    fi
+    
+    # Clean fish history if exists
+    if [ -d "$user_home/.local/share/fish" ]; then
+        echo "Cleaning fish history for $(basename "$user_home")" >> /var/log/securonis/cleanup/bash_history.log
+        rm -f "$user_home/.local/share/fish/fish_history" 2>/dev/null
+    fi
+done
+
+# Clear current session history
+history -c 2>/dev/null
+
+# Log completion
+echo "Bash history cleanup completed at $(date)" >> /var/log/securonis/cleanup/bash_history.log
+
+exit 0

@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - Hide kernel pointer addresses
+DefaultDependencies=no
+Before=sysinit.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w kernel.kptr_restrict=1
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

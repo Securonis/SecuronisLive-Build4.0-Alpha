@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# Create log directory
+mkdir -p /var/log/securonis/cleanup
+
+# Log start
+echo "Starting system logs cleanup at $(date)" > /var/log/securonis/cleanup/system_logs.log
+
+# Function to safely clean logs
+clean_log_file() {
+    local log_file="$1"
+    if [ -f "$log_file" ]; then
+        echo "Cleaning log file: $log_file" >> /var/log/securonis/cleanup/system_logs.log
+        cat /dev/null > "$log_file" 2>/dev/null
+    fi
+}
+
+# Clean various system logs
+echo "Cleaning system logs..." >> /var/log/securonis/cleanup/system_logs.log
+
+# Clean auth log
+clean_log_file "/var/log/auth.log"
+
+# Clean syslog
+clean_log_file "/var/log/syslog"
+
+# Clean kernel log
+clean_log_file "/var/log/kern.log"
+
+# Clean daemon log
+clean_log_file "/var/log/daemon.log"
+
+# Clean apt logs
+clean_log_file "/var/log/apt/history.log"
+clean_log_file "/var/log/apt/term.log"
+
+# Clean boot logs
+clean_log_file "/var/log/boot.log"
+
+# Clean dpkg logs
+clean_log_file "/var/log/dpkg.log"
+
+# Clean alternatives logs
+clean_log_file "/var/log/alternatives.log"
+
+# Clean wtmp (login records)
+if [ -f "/var/log/wtmp" ]; then
+    echo "Cleaning wtmp log" >> /var/log/securonis/cleanup/system_logs.log
+    cat /dev/null > /var/log/wtmp 2>/dev/null
+fi
+
+# Clean btmp (bad login attempts)
+if [ -f "/var/log/btmp" ]; then
+    echo "Cleaning btmp log" >> /var/log/securonis/cleanup/system_logs.log
+    cat /dev/null > /var/log/btmp 2>/dev/null
+fi
+
+# Clean lastlog (last login records)
+if [ -f "/var/log/lastlog" ]; then
+    echo "Cleaning lastlog" >> /var/log/securonis/cleanup/system_logs.log
+    cat /dev/null > /var/log/lastlog 2>/dev/null
+fi
+
+# Clean journal logs if systemd is used
+if command -v journalctl &> /dev/null; then
+    echo "Cleaning systemd journal logs" >> /var/log/securonis/cleanup/system_logs.log
+    journalctl --vacuum-time=1s 2>/dev/null
+fi
+
+# Log completion
+echo "System logs cleanup completed at $(date)" >> /var/log/securonis/cleanup/system_logs.log
+
+exit 0

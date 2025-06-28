@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Create a directory for audio protection settings if it doesn't exist
+mkdir -p /etc/securonis/audio
+
+# Function to protect against audio fingerprinting
+protect_audio() {
+    # Generate a small amount of noise to add to audio fingerprinting
+    AUDIO_NOISE_LEVEL=$((RANDOM % 5 + 1))
+    
+    # Save the audio noise level to a file
+    echo "AUDIO_NOISE_LEVEL=$AUDIO_NOISE_LEVEL" > /etc/securonis/audio/settings
+    
+    # Create Firefox override if Firefox directory exists
+    if [ -d /etc/firefox/pref ]; then
+        mkdir -p /etc/firefox/pref
+        echo 'pref("privacy.resistFingerprinting", true);' > /etc/firefox/pref/audio-settings.js
+        echo 'pref("media.navigator.enabled", false);' >> /etc/firefox/pref/audio-settings.js
+    fi
+    
+    # Create Chrome override if Chrome directory exists
+    if [ -d /etc/opt/chrome/policies/managed ]; then
+        mkdir -p /etc/opt/chrome/policies/managed
+        echo '{
+  "AudioCaptureAllowed": false
+}' > /etc/opt/chrome/policies/managed/audio.json
+    fi
+    
+    # Apply settings to system environment
+    if [ -f /etc/environment ]; then
+        # Remove any existing audio settings
+        sed -i '/AUDIO_NOISE_LEVEL/d' /etc/environment
+        # Add new setting
+        echo "AUDIO_NOISE_LEVEL=$AUDIO_NOISE_LEVEL" >> /etc/environment
+    fi
+    
+    # Sleep for a random period between 1-3 hours before changing again
+    sleep $((RANDOM % 7200 + 3600))
+}
+
+# Main loop to continuously protect audio
+while true; do
+    protect_audio
+done

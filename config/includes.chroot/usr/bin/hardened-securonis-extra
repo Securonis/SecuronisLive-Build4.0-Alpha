@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Exit if already applied
+if [ -f /var/lib/securonis-hardening-done ]; then
+    echo "Securonis hardening has already been applied."
+    exit 0
+fi
+
+echo "[+] Disabling Anacron..."
+systemctl disable anacron 2>/dev/null
+systemctl mask anacron 2>/dev/null
+
+echo "[+] Applying lightweight kernel module blacklist..."
+cat <<EOF > /etc/modprobe.d/securonis-blacklist.conf
+# Lightweight Securonis module blacklist
+
+blacklist dccp
+blacklist sctp
+blacklist rds
+blacklist tipc
+blacklist firewire-core
+
+# Optional (commented out)
+# blacklist bluetooth
+# blacklist usb_storage
+EOF
+
+# Mark as completed
+mkdir -p /var/lib
+touch /var/lib/securonis-hardening-done
+
+echo "[✓] Security settings applied successfully."
+exit 0

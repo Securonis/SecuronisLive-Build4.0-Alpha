@@ -1,0 +1,13 @@
+[Unit]
+Description=Securonis Anti-Fingerprinting Master Service
+After=network.target
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/securonis-antifingerprint-manager start
+ExecStop=/usr/bin/securonis-antifingerprint-manager stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

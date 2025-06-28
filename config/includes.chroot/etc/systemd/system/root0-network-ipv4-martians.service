@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - Enable martian packet logging
+DefaultDependencies=no
+Before=network.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w net.ipv4.conf.all.log_martians=1
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

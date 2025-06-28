@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - TCP write memory settings
+DefaultDependencies=no
+Before=network.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w net.ipv4.tcp_wmem="8192 65536 16777216"
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

@@ -1,0 +1,46 @@
+#!/bin/bash
+set -e
+### BEGIN INIT INFO
+# Provides:          jason-autowipe
+# Required-Start:
+# Required-Stop:        umountroot
+# Should-Start:
+# Should-Stop:          halt reboot
+# Default-Start:        2 3 4 5
+# Default-Stop:         0 1 6
+# Short-Description: Jason Autowipe box and clean the RAM.
+### END INIT INFO
+
+
+function wipe {
+	echo "starting jason auto wipe "
+	sleep 5
+    echo "Pandora is dropping caches"
+    echo 1024 > /proc/sys/vm/min_free_kbytes
+    echo 3  > /proc/sys/vm/drop_caches
+    echo 1  > /proc/sys/vm/oom_kill_allocating_task
+    echo 1  > /proc/sys/vm/overcommit_memory
+    echo 0  > /proc/sys/vm/oom_dump_tasks
+    echo "Jason is wiping RAM"
+    sdmem -fllv
+    echo " - RAM cleared"
+    echo "closing jason auto wipe"
+}
+
+
+case "$1" in
+        start)
+                echo "Argument '$1' is not supported, use wipe instead"
+        ;;
+        restart|reload|force-reload)
+                echo "Error: argument '$1' is not supported, use wipe instead"
+        ;;
+        stop)
+              wipe  
+        ;;
+        wipe)
+              wipe
+        ;;
+        *)
+              echo "USAGE: wipe "
+esac

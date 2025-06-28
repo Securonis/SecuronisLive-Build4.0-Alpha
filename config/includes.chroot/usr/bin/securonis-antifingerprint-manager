@@ -1,0 +1,161 @@
+#!/bin/bash
+
+# Create a directory for the manager settings if it doesn't exist
+mkdir -p /etc/securonis/manager
+mkdir -p /etc/securonis/dmesg
+
+# List of all securonis services
+
+CRITICAL_SERVICES=(
+    "securonis-hide-hwinfo.service"
+    "securonis-dmesg-restrict.service"
+)
+
+
+PERFORMANCE_SERVICES=(
+    "securonis-canvas-noise.service"
+    "securonis-useragent-randomizer.service"
+    "securonis-webgl-spoofer.service"
+    "securonis-font-randomizer.service"
+    "securonis-audio-protection.service"
+    "securonis-cookie-manager.service"
+)
+
+
+OPTIONAL_SERVICES=(
+    "securonis-screen-randomizer.service"
+)
+
+
+ALL_SERVICES=("${CRITICAL_SERVICES[@]}" "${PERFORMANCE_SERVICES[@]}" "${OPTIONAL_SERVICES[@]}")
+
+# Function to start all services
+start_services() {
+    echo "Starting Securonis Anti-Fingerprinting Services..."
+    
+    # Make all scripts executable
+    chmod +x /usr/bin/securonis-*
+    
+    # Enable and start critical services
+    echo "\nStarting critical services..."
+    for service in "${CRITICAL_SERVICES[@]}"; do
+        echo "Enabling and starting $service"
+        systemctl enable "$service" 2>/dev/null
+        systemctl start "$service" 2>/dev/null
+    done
+    
+    # Enable and start performance services
+    echo "\nStarting performance-optimized services..."
+    for service in "${PERFORMANCE_SERVICES[@]}"; do
+        echo "Enabling and starting $service"
+        systemctl enable "$service" 2>/dev/null
+        systemctl start "$service" 2>/dev/null
+    done
+    
+    # Enable and start optional services
+    echo "\nStarting optional services..."
+    for service in "${OPTIONAL_SERVICES[@]}"; do
+        echo "Enabling and starting $service"
+        systemctl enable "$service" 2>/dev/null
+        systemctl start "$service" 2>/dev/null
+    done
+    
+    # Create status file
+    echo "All services started at $(date)" > /etc/securonis/manager/status
+    echo "ACTIVE" > /etc/securonis/manager/state
+    
+    echo "\nAll Securonis Anti-Fingerprinting Services have been started."
+    echo "These services have been optimized for performance and will not affect system stability."
+    echo "Your system clock will continue to show the correct time to you."
+}
+
+# Function to stop all services
+stop_services() {
+    echo "Stopping Securonis Anti-Fingerprinting Services..."
+    
+    # Stop and disable each service
+    for service in "${ALL_SERVICES[@]}"; do
+        echo "Stopping and disabling $service"
+        systemctl stop "$service" 2>/dev/null
+        systemctl disable "$service" 2>/dev/null
+    done
+    
+    # Update status file
+    echo "All services stopped at $(date)" > /etc/securonis/manager/status
+    echo "INACTIVE" > /etc/securonis/manager/state
+    
+    echo "All Securonis Anti-Fingerprinting Services have been stopped."
+}
+
+# Function to check status of all services
+check_status() {
+    echo "Checking Securonis Anti-Fingerprinting Services status..."
+    
+    echo "\nCritical services:"
+    for service in "${CRITICAL_SERVICES[@]}"; do
+        status=$(systemctl is-active "$service" 2>/dev/null)
+        echo "$service: $status"
+    done
+    
+    echo "\nPerformance-optimized services:"
+    for service in "${PERFORMANCE_SERVICES[@]}"; do
+        status=$(systemctl is-active "$service" 2>/dev/null)
+        echo "$service: $status"
+    done
+    
+    echo "\nOptional services:"
+    for service in "${OPTIONAL_SERVICES[@]}"; do
+        status=$(systemctl is-active "$service" 2>/dev/null)
+        echo "$service: $status"
+    done
+    
+    if [ -f /etc/securonis/manager/state ]; then
+        state=$(cat /etc/securonis/manager/state)
+        echo "\nOverall state: $state"
+    else
+        echo "\nOverall state: UNKNOWN"
+    fi
+    
+    # Show system resource usage
+    echo "\nSystem resource usage:"
+    top -b -n 1 | grep "securonis" | head -5
+}
+
+# Function to disable optional services for better performance
+disable_optional() {
+    echo "Disabling optional services for better performance..."
+    
+    for service in "${OPTIONAL_SERVICES[@]}"; do
+        echo "Stopping and disabling $service"
+        systemctl stop "$service" 2>/dev/null
+        systemctl disable "$service" 2>/dev/null
+    done
+    
+    echo "Optional services disabled. System will use less resources now."
+}
+
+# Main function to handle commands
+case "$1" in
+    start)
+        start_services
+        ;;
+    stop)
+        stop_services
+        ;;
+    status)
+        check_status
+        ;;
+    performance)
+        disable_optional
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|status|performance}"
+        echo "  start       - Start all anti-fingerprinting services"
+        echo "  stop        - Stop all anti-fingerprinting services"
+        echo "  status      - Check status of all services"
+        echo "  performance - Disable optional services for better performance"
+        exit 1
+        ;;
+esac
+
+exit 0

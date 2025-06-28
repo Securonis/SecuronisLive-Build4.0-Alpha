@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Create log directory
+mkdir -p /var/log/securonis/cleanup
+
+# Log start
+echo "Starting master cleanup process at $(date)" > /var/log/securonis/cleanup/master.log
+
+# Check if all cleanup scripts are executable
+chmod +x /usr/bin/securonis-cleanup-*
+
+# Log status of individual cleanup services
+echo "Checking status of cleanup services:" >> /var/log/securonis/cleanup/master.log
+systemctl is-active securonis-cleanup-browser.service >> /var/log/securonis/cleanup/master.log 2>&1
+systemctl is-active securonis-cleanup-logs.service >> /var/log/securonis/cleanup/master.log 2>&1
+systemctl is-active securonis-cleanup-temp.service >> /var/log/securonis/cleanup/master.log 2>&1
+systemctl is-active securonis-cleanup-bash-history.service >> /var/log/securonis/cleanup/master.log 2>&1
+systemctl is-active securonis-cleanup-swap.service >> /var/log/securonis/cleanup/master.log 2>&1
+
+# Log completion
+echo "Master cleanup process completed at $(date)" >> /var/log/securonis/cleanup/master.log
+
+exit 0

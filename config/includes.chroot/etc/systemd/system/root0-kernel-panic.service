@@ -1,0 +1,14 @@
+[Unit]
+Description=Root0 - Configure kernel panic behavior
+DefaultDependencies=no
+Before=sysinit.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w kernel.panic=10
+ExecStart=/usr/sbin/sysctl -w kernel.panic_on_oops=10
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

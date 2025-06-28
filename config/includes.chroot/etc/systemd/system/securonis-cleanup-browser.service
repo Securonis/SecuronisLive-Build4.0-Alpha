@@ -1,0 +1,14 @@
+[Unit]
+Description=Securonis - Clean Browser History on Shutdown
+DefaultDependencies=no
+Before=shutdown.target reboot.target halt.target
+Conflicts=reboot.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/securonis-cleanup-browser
+TimeoutStartSec=30
+RemainAfterExit=no
+
+[Install]
+WantedBy=shutdown.target

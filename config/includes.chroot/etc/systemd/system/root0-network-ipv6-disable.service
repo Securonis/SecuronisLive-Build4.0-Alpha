@@ -1,0 +1,15 @@
+[Unit]
+Description=Root0 - Disable IPv6 to prevent leaks
+DefaultDependencies=no
+Before=network.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w net.ipv6.conf.all.disable_ipv6=1
+ExecStart=/usr/sbin/sysctl -w net.ipv6.conf.default.disable_ipv6=1
+ExecStart=/usr/sbin/sysctl -w net.ipv6.conf.lo.disable_ipv6=1
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

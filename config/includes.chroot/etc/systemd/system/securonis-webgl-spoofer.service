@@ -1,0 +1,13 @@
+[Unit]
+Description=Securonis - WebGL Fingerprinting Spoofer
+After=network.target
+DefaultDependencies=no
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/securonis-webgl-spoofer
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,6 @@
+System:Securonis Linux
+Version:4.0
+Codename:Kagune
+ReleaseType:Rolling
+BasedOn:Debian Trixie(Testing)
+

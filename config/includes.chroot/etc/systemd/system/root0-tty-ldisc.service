@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - Configure TTY line discipline autoload
+DefaultDependencies=no
+Before=sysinit.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w dev.tty.ldisc_autoload=1
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

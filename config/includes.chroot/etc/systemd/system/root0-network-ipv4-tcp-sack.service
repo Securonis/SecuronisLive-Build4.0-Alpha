@@ -1,0 +1,14 @@
+[Unit]
+Description=Root0 - Disable TCP SACK
+DefaultDependencies=no
+Before=network.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w net.ipv4.tcp_sack=0
+ExecStart=/usr/sbin/sysctl -w net.ipv4.tcp_dsack=0
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - Disable SUID core dumps
+DefaultDependencies=no
+Before=sysinit.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w fs.suid_dumpable=0
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

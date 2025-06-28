@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Create log directory
+mkdir -p /var/log/securonis/cleanup
+
+# Log start
+echo "Starting SWAP memory cleanup at $(date)" > /var/log/securonis/cleanup/swap.log
+
+# Check if swapoff and swapon commands exist
+if ! command -v swapoff &> /dev/null || ! command -v swapon &> /dev/null; then
+    echo "Error: swapoff or swapon commands not found" >> /var/log/securonis/cleanup/swap.log
+    exit 1
+fi
+
+# Get list of swap devices
+SWAP_DEVICES=$(swapon --show=NAME --noheadings 2>/dev/null)
+
+if [ -z "$SWAP_DEVICES" ]; then
+    echo "No active swap devices found" >> /var/log/securonis/cleanup/swap.log
+    exit 0
+fi
+
+# Disable swap, clear it, and re-enable it
+echo "Found the following swap devices:" >> /var/log/securonis/cleanup/swap.log
+echo "$SWAP_DEVICES" >> /var/log/securonis/cleanup/swap.log
+
+echo "Disabling swap..." >> /var/log/securonis/cleanup/swap.log
+swapoff -a
+
+echo "Re-enabling swap..." >> /var/log/securonis/cleanup/swap.log
+swapon -a
+
+# Log completion
+echo "SWAP memory cleanup completed at $(date)" >> /var/log/securonis/cleanup/swap.log
+
+exit 0

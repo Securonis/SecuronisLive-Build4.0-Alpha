@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Create a directory for cookie management settings if it doesn't exist
+mkdir -p /etc/securonis/cookies
+
+# Function to manage cookies and prevent tracking
+manage_cookies() {
+    # Generate random cookie settings
+    COOKIE_POLICY=$((RANDOM % 3 + 1))
+    
+    # Save the cookie policy to a file
+    echo "COOKIE_POLICY=$COOKIE_POLICY" > /etc/securonis/cookies/settings
+    
+    # Create Firefox override if Firefox directory exists
+    if [ -d /etc/firefox/pref ]; then
+        mkdir -p /etc/firefox/pref
+        echo 'pref("network.cookie.cookieBehavior", '"$COOKIE_POLICY"');' > /etc/firefox/pref/cookie-settings.js
+        echo 'pref("privacy.trackingprotection.enabled", true);' >> /etc/firefox/pref/cookie-settings.js
+        echo 'pref("privacy.trackingprotection.fingerprinting.enabled", true);' >> /etc/firefox/pref/cookie-settings.js
+        echo 'pref("privacy.trackingprotection.cryptomining.enabled", true);' >> /etc/firefox/pref/cookie-settings.js
+    fi
+    
+    # Create Chrome override if Chrome directory exists
+    if [ -d /etc/opt/chrome/policies/managed ]; then
+        mkdir -p /etc/opt/chrome/policies/managed
+        echo '{
+  "BlockThirdPartyCookies": true,
+  "DefaultCookiesSetting": '"$COOKIE_POLICY"'
+}' > /etc/opt/chrome/policies/managed/cookies.json
+    fi
+    
+    # Apply settings to system environment
+    if [ -f /etc/environment ]; then
+        # Remove any existing cookie settings
+        sed -i '/COOKIE_POLICY/d' /etc/environment
+        # Add new setting
+        echo "COOKIE_POLICY=$COOKIE_POLICY" >> /etc/environment
+    fi
+    
+    # Sleep for a random period between 2-4 hours before changing again
+    sleep $((RANDOM % 7200 + 7200))
+}
+
+# Main loop to continuously manage cookies
+while true; do
+    manage_cookies
+done

@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - ARP table unresolved queue length
+DefaultDependencies=no
+Before=network.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w net.ipv4.neigh.default.unres_qlen=6
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - Set minimum memory mapping address
+DefaultDependencies=no
+Before=sysinit.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w vm.mmap_min_addr=65536
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

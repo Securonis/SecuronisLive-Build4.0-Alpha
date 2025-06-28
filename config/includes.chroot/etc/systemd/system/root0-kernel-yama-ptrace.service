@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - Restrict ptrace access
+DefaultDependencies=no
+Before=sysinit.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w kernel.yama.ptrace_scope=1
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

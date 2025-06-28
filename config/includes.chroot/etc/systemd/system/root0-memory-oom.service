@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - Configure OOM killer
+DefaultDependencies=no
+Before=sysinit.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w vm.panic_on_oom=0
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

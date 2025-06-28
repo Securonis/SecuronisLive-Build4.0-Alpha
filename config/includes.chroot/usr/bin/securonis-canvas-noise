@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Create a directory for the canvas noise settings if it doesn't exist
+mkdir -p /etc/securonis/canvas
+
+# Function to add noise to canvas fingerprinting
+add_canvas_noise() {
+    # Create a small amount of randomness in the system's canvas rendering
+    # Sadece 1-3 arası değerler kullanarak performansı artırıyoruz
+    NOISE_LEVEL=$((RANDOM % 3 + 1))
+    echo "export CANVAS_NOISE_LEVEL=$NOISE_LEVEL" > /etc/securonis/canvas/settings
+    
+    # Create Firefox override if Firefox directory exists
+    if [ -d /etc/firefox/pref ]; then
+        mkdir -p /etc/firefox/pref
+        echo 'pref("privacy.resistFingerprinting", true);' > /etc/firefox/pref/canvas-settings.js
+    fi
+    
+    # Create Chrome override if Chrome directory exists
+    if [ -d /etc/opt/chrome/policies/managed ]; then
+        mkdir -p /etc/opt/chrome/policies/managed
+        echo '{
+  "CanvasNoiseLevel": '$NOISE_LEVEL'
+}' > /etc/opt/chrome/policies/managed/canvas.json
+    fi
+    
+    # Sleep for a random period between 2-4 hours before changing again
+    sleep $((RANDOM % 7200 + 7200))
+}
+
+# Main loop to continuously add noise
+while true; do
+    add_canvas_noise
+done

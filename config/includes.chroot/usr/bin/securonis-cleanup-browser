@@ -1,0 +1,107 @@
+#!/bin/bash
+
+# Create log directory
+mkdir -p /var/log/securonis/cleanup
+
+# Log start
+echo "Starting browser cleanup at $(date)" > /var/log/securonis/cleanup/browser.log
+
+# Function to clean Firefox profiles
+clean_firefox() {
+    echo "Cleaning Firefox profiles..." >> /var/log/securonis/cleanup/browser.log
+    
+    # Find all Firefox profiles
+    for user_home in /home/*; do
+        if [ -d "$user_home/.mozilla/firefox" ]; then
+            echo "Found Firefox profiles in $user_home" >> /var/log/securonis/cleanup/browser.log
+            
+            # Find profile directories
+            find "$user_home/.mozilla/firefox" -name "*.default*" -type d | while read profile; do
+                echo "Cleaning profile: $profile" >> /var/log/securonis/cleanup/browser.log
+                
+                # Remove cache
+                rm -rf "$profile/cache2" 2>/dev/null
+                
+                # Remove cookies
+                rm -f "$profile/cookies.sqlite" 2>/dev/null
+                
+                # Remove history
+                rm -f "$profile/places.sqlite" 2>/dev/null
+                
+                # Remove form history
+                rm -f "$profile/formhistory.sqlite" 2>/dev/null
+                
+                # Remove session store
+                rm -f "$profile/sessionstore.js" 2>/dev/null
+                rm -f "$profile/sessionstore-backups/"* 2>/dev/null
+            done
+        fi
+    done
+}
+
+# Function to clean Chrome/Chromium profiles
+clean_chrome() {
+    echo "Cleaning Chrome/Chromium profiles..." >> /var/log/securonis/cleanup/browser.log
+    
+    # Find all Chrome/Chromium profiles
+    for user_home in /home/*; do
+        # Chrome
+        if [ -d "$user_home/.config/google-chrome" ]; then
+            echo "Found Chrome profiles in $user_home" >> /var/log/securonis/cleanup/browser.log
+            
+            # Clean Default profile
+            if [ -d "$user_home/.config/google-chrome/Default" ]; then
+                echo "Cleaning Chrome Default profile" >> /var/log/securonis/cleanup/browser.log
+                
+                # Remove cache
+                rm -rf "$user_home/.config/google-chrome/Default/Cache" 2>/dev/null
+                rm -rf "$user_home/.config/google-chrome/Default/Code Cache" 2>/dev/null
+                
+                # Remove cookies
+                rm -f "$user_home/.config/google-chrome/Default/Cookies" 2>/dev/null
+                
+                # Remove history
+                rm -f "$user_home/.config/google-chrome/Default/History" 2>/dev/null
+                
+                # Remove session
+                rm -f "$user_home/.config/google-chrome/Default/Current Session" 2>/dev/null
+                rm -f "$user_home/.config/google-chrome/Default/Current Tabs" 2>/dev/null
+            fi
+        fi
+        
+        # Chromium
+        if [ -d "$user_home/.config/chromium" ]; then
+            echo "Found Chromium profiles in $user_home" >> /var/log/securonis/cleanup/browser.log
+            
+            # Clean Default profile
+            if [ -d "$user_home/.config/chromium/Default" ]; then
+                echo "Cleaning Chromium Default profile" >> /var/log/securonis/cleanup/browser.log
+                
+                # Remove cache
+                rm -rf "$user_home/.config/chromium/Default/Cache" 2>/dev/null
+                rm -rf "$user_home/.config/chromium/Default/Code Cache" 2>/dev/null
+                
+                # Remove cookies
+                rm -f "$user_home/.config/chromium/Default/Cookies" 2>/dev/null
+                
+                # Remove history
+                rm -f "$user_home/.config/chromium/Default/History" 2>/dev/null
+                
+                # Remove session
+                rm -f "$user_home/.config/chromium/Default/Current Session" 2>/dev/null
+                rm -f "$user_home/.config/chromium/Default/Current Tabs" 2>/dev/null
+            fi
+        fi
+    done
+}
+
+# Clean Firefox
+clean_firefox
+
+# Clean Chrome/Chromium
+clean_chrome
+
+# Log completion
+echo "Browser cleanup completed at $(date)" >> /var/log/securonis/cleanup/browser.log
+
+exit 0

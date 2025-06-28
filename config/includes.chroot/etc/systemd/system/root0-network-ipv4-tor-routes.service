@@ -1,0 +1,15 @@
+[Unit]
+Description=Root0 - Prevent IP leaks for Tor routing
+DefaultDependencies=no
+Before=network.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w net.ipv4.conf.all.send_redirects=0
+ExecStart=/usr/sbin/sysctl -w net.ipv4.conf.all.accept_source_route=0
+ExecStart=/usr/sbin/sysctl -w net.ipv4.ip_forward=0
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Create a directory for the WebGL settings if it doesn't exist
+mkdir -p /etc/securonis/webgl
+
+# Common WebGL renderer strings to rotate through - daha az seçenek kullanarak performansı artırıyoruz
+WEBGL_RENDERERS=(
+    "ANGLE (Intel, Intel(R) UHD Graphics Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    "ANGLE (NVIDIA, NVIDIA GeForce GTX 1060 Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    "ANGLE (AMD, AMD Radeon RX 580 Direct3D11 vs_5_0 ps_5_0, D3D11)"
+)
+
+# Function to spoof WebGL information
+spoof_webgl() {
+    # Select a random WebGL renderer from the array
+    RANDOM_INDEX=$((RANDOM % ${#WEBGL_RENDERERS[@]}))
+    SELECTED_RENDERER="${WEBGL_RENDERERS[$RANDOM_INDEX]}"
+    
+    # Save the selected renderer to a file
+    echo "WEBGL_RENDERER=\"$SELECTED_RENDERER\"" > /etc/securonis/webgl/current
+    
+    # Create Firefox override if Firefox directory exists
+    if [ -d /etc/firefox/pref ]; then
+        mkdir -p /etc/firefox/pref
+        echo 'pref("privacy.resistFingerprinting", true);' > /etc/firefox/pref/webgl-settings.js
+        # WebGL'i tamamen devre dışı bırakmak yerine sadece parmak izini engelliyoruz
+        echo 'pref("webgl.disabled", false);' >> /etc/firefox/pref/webgl-settings.js
+        echo 'pref("webgl.renderer-string-override", "'"$SELECTED_RENDERER"'");' >> /etc/firefox/pref/webgl-settings.js
+    fi
+    
+    # Create Chrome override if Chrome directory exists
+    if [ -d /etc/opt/chrome/policies/managed ]; then
+        mkdir -p /etc/opt/chrome/policies/managed
+        echo '{
+  "WebGLRendererOverride": "'"$SELECTED_RENDERER"'"
+}' > /etc/opt/chrome/policies/managed/webgl.json
+    fi
+    
+    # Sleep for a random period between 8-16 hours before changing again
+    # Daha uzun süre bekleyerek sistem yükünü azaltıyoruz
+    sleep $((RANDOM % 28800 + 28800))
+}
+
+# Main loop to continuously spoof WebGL information
+while true; do
+    spoof_webgl
+done

@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - Configure swap usage
+DefaultDependencies=no
+Before=sysinit.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w vm.swappiness=10
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

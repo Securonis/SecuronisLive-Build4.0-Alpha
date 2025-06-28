@@ -1,0 +1,13 @@
+[Unit]
+Description=Root0 - Restrict SysRq
+DefaultDependencies=no
+Before=sysinit.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sysctl -w kernel.sysrq=4
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 
