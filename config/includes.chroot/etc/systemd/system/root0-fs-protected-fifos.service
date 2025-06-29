@@ -1,12 +1,12 @@
 [Unit]
-Description=Root0 - Unprivileged user namespaces
+Description=Root0 - Protect FIFO special files
 DefaultDependencies=no
 Before=sysinit.target
 After=local-fs.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/sbin/sysctl -w kernel.unprivileged_userns_clone=1
+ExecStart=/usr/sbin/sysctl -w fs.protected_fifos=2
 RemainAfterExit=yes
 
 [Install]

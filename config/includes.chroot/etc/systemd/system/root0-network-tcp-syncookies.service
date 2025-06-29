@@ -1,12 +1,12 @@
 [Unit]
-Description=Root0 - Configure swap usage
+Description=Root0 - Enable TCP SYN cookies
 DefaultDependencies=no
-Before=sysinit.target
+Before=network.target
 After=local-fs.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/sbin/sysctl -w vm.swappiness=60
+ExecStart=/usr/sbin/sysctl -w net.ipv4.tcp_syncookies=1
 RemainAfterExit=yes
 
 [Install]

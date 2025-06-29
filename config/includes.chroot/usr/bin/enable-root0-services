@@ -21,6 +21,8 @@ systemctl enable root0-network-ipv4-ignore-bogus.service
 systemctl enable root0-network-ipv4-syn-backlog.service
 systemctl enable root0-network-ipv4-synack-retries.service
 systemctl enable root0-network-ipv4-tcp-sack.service
+systemctl enable root0-network-tcp-syncookies.service
+systemctl enable root0-network-tcp-max-orphans.service
 
 # New TCP optimization services
 systemctl enable root0-network-tcp-rmem.service
@@ -39,23 +41,23 @@ systemctl enable root0-kernel-sysrq.service
 systemctl enable root0-kernel-core-pid.service
 systemctl enable root0-kernel-panic.service
 systemctl enable root0-kernel-perf.service
-systemctl enable root0-kernel-userns.service
+systemctl enable root0-kernel-kexec.service
+systemctl enable root0-kernel-bpf-jit.service
 
 # Filesystem security services
 systemctl enable root0-fs-protected-hardlinks.service
 systemctl enable root0-fs-protected-symlinks.service
 systemctl enable root0-fs-suid-dump.service
+systemctl enable root0-fs-protected-fifos.service
 
 # TTY settings
 systemctl enable root0-tty-ldisc.service
 
 # Memory security services
-systemctl enable root0-memory-unprivileged-bpf.service
 systemctl enable root0-memory-aslr.service
-systemctl enable root0-memory-mmap-min.service
 systemctl enable root0-memory-swappiness.service
+systemctl enable root0-memory-vfs-cache-pressure.service
 systemctl enable root0-memory-dirty-ratio.service
-systemctl enable root0-memory-oom.service
 
 # ARP services
 systemctl enable root0-network-arp-gc-thresh3.service

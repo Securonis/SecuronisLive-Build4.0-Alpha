@@ -21,6 +21,8 @@ systemctl disable root0-network-ipv4-ignore-bogus.service
 systemctl disable root0-network-ipv4-syn-backlog.service
 systemctl disable root0-network-ipv4-synack-retries.service
 systemctl disable root0-network-ipv4-tcp-sack.service
+systemctl disable root0-network-tcp-syncookies.service
+systemctl disable root0-network-tcp-max-orphans.service
 
 # New TCP optimization services
 systemctl disable root0-network-tcp-rmem.service
@@ -39,23 +41,23 @@ systemctl disable root0-kernel-sysrq.service
 systemctl disable root0-kernel-core-pid.service
 systemctl disable root0-kernel-panic.service
 systemctl disable root0-kernel-perf.service
-systemctl disable root0-kernel-userns.service
+systemctl disable root0-kernel-kexec.service
+systemctl disable root0-kernel-bpf-jit.service
 
 # Filesystem security services
 systemctl disable root0-fs-protected-hardlinks.service
 systemctl disable root0-fs-protected-symlinks.service
 systemctl disable root0-fs-suid-dump.service
+systemctl disable root0-fs-protected-fifos.service
 
 # TTY settings
 systemctl disable root0-tty-ldisc.service
 
 # Memory security services
-systemctl disable root0-memory-unprivileged-bpf.service
 systemctl disable root0-memory-aslr.service
-systemctl disable root0-memory-mmap-min.service
 systemctl disable root0-memory-swappiness.service
+systemctl disable root0-memory-vfs-cache-pressure.service
 systemctl disable root0-memory-dirty-ratio.service
-systemctl disable root0-memory-oom.service
 
 # Reset sysctl parameters to default values
 echo "Resetting sysctl parameters to default values..."
