@@ -15,4 +15,7 @@ onionshare
 # suspect packages for boot issue # check 
 clamav
 rkhunter
+### 4.0 ###
 monero
+kleopatra
+qtox

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Moneronis
+Comment=CLI Menu for Monero
+Exec=mate-terminal -- bash -c "sudo /usr/local/bin/moneronis; exec bash"
+Icon=/usr/share/icons/securonis/monero.png
+Terminal=true
+Type=Application
+Categories=GTK;Network;
