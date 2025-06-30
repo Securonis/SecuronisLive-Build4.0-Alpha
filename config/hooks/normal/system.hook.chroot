@@ -14,6 +14,8 @@ systemctl enable securonis-anti-ipspoof.service
 
 systemctl enable hardened-securonis-extra.service
 
+systemctl enable armor-hardening.service
+
 #systemctl enable seconionis-autostart.service
 
 # Network security services
