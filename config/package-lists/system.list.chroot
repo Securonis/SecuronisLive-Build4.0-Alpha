@@ -31,3 +31,4 @@ dconf-cli
 xsel
 python3-pyqt5.qtsvg
 haveged
+openssh-server
