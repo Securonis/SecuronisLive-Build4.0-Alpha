@@ -7,7 +7,6 @@ mkdir -p /etc/securonis/dmesg
 # List of all securonis services
 
 CRITICAL_SERVICES=(
-    "securonis-hide-hwinfo.service"
     "securonis-dmesg-restrict.service"
 )
 

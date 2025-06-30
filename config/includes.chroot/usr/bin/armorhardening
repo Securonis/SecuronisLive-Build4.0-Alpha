@@ -1,0 +1,139 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import subprocess
+import logging
+from pathlib import Path
+import pwd
+import grp
+import stat
+
+# Logging configuration
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('/var/log/armor-hardening.log'),
+        logging.StreamHandler()
+    ]
+)
+
+class SystemHardening:
+    def __init__(self):
+        self.logger = logging.getLogger(__name__)
+        
+    def check_root(self):
+        """Check if script is running as root"""
+        if os.geteuid() != 0:
+            self.logger.error("This script must be run as root")
+            sys.exit(1)
+
+    def secure_file_permissions(self):
+        """Hardens permissions on critical system files and directories"""
+        # Critical system files that should be restricted
+        critical_files = {
+            '/etc/passwd': (0o644, 0, 0),  # root:root, readable but not writable by others
+            '/etc/shadow': (0o600, 0, 0),  # root:root, no access for others
+            '/etc/group': (0o644, 0, 0),   # root:root, readable but not writable by others
+            '/etc/gshadow': (0o600, 0, 0), # root:root, no access for others
+            '/etc/sudoers': (0o440, 0, 0), # root:root, readable by sudo group
+            '/etc/ssh/sshd_config': (0o600, 0, 0), # root:root, no access for others
+            '/etc/hosts': (0o644, 0, 0),   # root:root, readable but not writable by others
+        }
+        
+        # Critical directories that should be restricted
+        critical_dirs = {
+            '/etc/ssh': (0o755, 0, 0),      # root:root, readable by others
+            '/etc/sudoers.d': (0o750, 0, 0), # root:root, readable by sudo group
+            '/root': (0o700, 0, 0),          # root:root, no access for others
+            '/var/log': (0o755, 0, 0),       # root:root, readable by others
+            '/boot': (0o755, 0, 0),          # root:root, readable by others
+            '/etc/cron.d': (0o755, 0, 0),    # root:root, readable by others
+            '/etc/cron.daily': (0o755, 0, 0),
+            '/etc/cron.hourly': (0o755, 0, 0),
+            '/etc/cron.monthly': (0o755, 0, 0),
+            '/etc/cron.weekly': (0o755, 0, 0)
+        }
+
+        # Secure critical files
+        for path, (mode, uid, gid) in critical_files.items():
+            try:
+                if os.path.isfile(path):
+                    current_stat = os.stat(path)
+                    if (current_stat.st_mode & 0o777) != mode or \
+                       current_stat.st_uid != uid or \
+                       current_stat.st_gid != gid:
+                        os.chmod(path, mode)
+                        os.chown(path, uid, gid)
+                        self.logger.info(f"Secured file permissions: {path}")
+                else:
+                    self.logger.warning(f"Critical file not found: {path}")
+            except Exception as e:
+                self.logger.error(f"Error securing file {path}: {str(e)}")
+
+        # Secure critical directories
+        for path, (mode, uid, gid) in critical_dirs.items():
+            try:
+                if os.path.isdir(path):
+                    current_stat = os.stat(path)
+                    if (current_stat.st_mode & 0o777) != mode or \
+                       current_stat.st_uid != uid or \
+                       current_stat.st_gid != gid:
+                        os.chmod(path, mode)
+                        os.chown(path, uid, gid)
+                        self.logger.info(f"Secured directory permissions: {path}")
+                else:
+                    self.logger.warning(f"Critical directory not found: {path}")
+            except Exception as e:
+                self.logger.error(f"Error securing directory {path}: {str(e)}")
+
+    def secure_ssh(self):
+        """Configures basic SSH security without restricting normal usage"""
+        ssh_config = '/etc/ssh/sshd_config'
+        secure_settings = [
+            'Protocol 2',
+            'MaxAuthTries 6',
+            'LoginGraceTime 120',
+            'PermitEmptyPasswords no',
+            'StrictModes yes',
+            'IgnoreRhosts yes'
+        ]
+        
+        try:
+            with open(ssh_config, 'a') as f:
+                f.write('\n# Basic security settings added by Armor Hardening\n')
+                for setting in secure_settings:
+                    f.write(f"{setting}\n")
+            self.logger.info("SSH configuration updated")
+            subprocess.run(['systemctl', 'restart', 'ssh'], check=True)
+        except Exception as e:
+            self.logger.error(f"Failed to update SSH configuration: {str(e)}")
+
+    def secure_umask(self):
+        """Sets secure but usable default permissions for new files"""
+        umask_files = ['/etc/profile', '/etc/bash.bashrc']
+        umask_setting = '\n# Secure default umask (added by Armor Hardening)\numask 022\n'
+        
+        for file in umask_files:
+            try:
+                with open(file, 'a') as f:
+                    f.write(umask_setting)
+                self.logger.info(f"Updated umask in {file}")
+            except Exception as e:
+                self.logger.error(f"Failed to update umask in {file}: {str(e)}")
+
+    def run(self):
+        """Applies all security hardening measures"""
+        self.check_root()
+        self.logger.info("Starting system hardening...")
+        
+        self.secure_file_permissions()
+        self.secure_ssh()
+        self.secure_umask()
+        
+        self.logger.info("System hardening completed successfully.")
+
+if __name__ == "__main__":
+    hardening = SystemHardening()
+    hardening.run() 
