@@ -303,7 +303,7 @@ slowkeys-enable=false
 color-shading-type='solid'
 primary-color='#2c2c00001e1e'
 picture-options='zoom'
-picture-filename='/usr/share/backgrounds/40.png'
+picture-filename='/usr/share/backgrounds/mastermind.png'
 secondary-color='#2c2c00001e1e'
 
 [org/mate/pluma]

@@ -9,8 +9,8 @@ windowPlacement: center
 strings:
     productName:         Securonis Linux
     shortProductName:    Securonis
-    version:             3.0
-    shortVersion:        3.0
+    version:             4.0
+    shortVersion:        4.0
     versionedName:       Securonis Linux
     shortVersionedName:  Securonis
     bootloaderEntryName: Securonis

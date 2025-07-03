@@ -59,9 +59,8 @@ system_check() {
         lspci | grep -i nvidia
     else
         show_warning "lspci command not found. To install it:"
-        echo "Ubuntu/Debian: sudo apt install pciutils"
-        echo "Fedora: sudo dnf install pciutils"
-        echo "Arch Linux: sudo pacman -S pciutils"
+        echo "sudo apt install pciutils"
+
     fi
     
     show_info "Checking current driver information..."
@@ -112,9 +111,8 @@ remove_old_driver() {
     echo "sudo rmmod nvidia"
     
     show_info "Removing drivers installed with package manager:"
-    echo "Ubuntu/Debian: sudo apt purge '*nvidia*'"
-    echo "Fedora: sudo dnf remove '*nvidia*'"
-    echo "Arch Linux: sudo pacman -Rs nvidia nvidia-utils"
+    echo " sudo apt purge '*nvidia*'"
+
     
     read -p "Press ENTER to return to the main menu."
     show_menu

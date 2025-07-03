@@ -23,7 +23,6 @@ spoof_webgl() {
     if [ -d /etc/firefox/pref ]; then
         mkdir -p /etc/firefox/pref
         echo 'pref("privacy.resistFingerprinting", true);' > /etc/firefox/pref/webgl-settings.js
-        # WebGL'i tamamen devre dışı bırakmak yerine sadece parmak izini engelliyoruz
         echo 'pref("webgl.disabled", false);' >> /etc/firefox/pref/webgl-settings.js
         echo 'pref("webgl.renderer-string-override", "'"$SELECTED_RENDERER"'");' >> /etc/firefox/pref/webgl-settings.js
     fi
@@ -37,7 +36,6 @@ spoof_webgl() {
     fi
     
     # Sleep for a random period between 8-16 hours before changing again
-    # Daha uzun süre bekleyerek sistem yükünü azaltıyoruz
     sleep $((RANDOM % 28800 + 28800))
 }
 

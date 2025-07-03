@@ -1,9 +1,10 @@
 [Desktop Entry]
 Version=1.0
-Name=Seconionis
-Comment=Tor Traffic Router for Securonis Linux
-Exec=pkexec seconionismenu
-Icon=/usr/share/icons/securonis/icon15.png
+Name=Seconionis Tor Router
+Comment=Route all system traffic through the Tor network.
+Exec=seconionis-check
 Terminal=false
 Type=Application
-Categories=Securonis;Securonis
+Icon=/usr/share/icons/securonis/seconionis.png
+Categories=Securonis;Securonis;
+StartupNotify=false

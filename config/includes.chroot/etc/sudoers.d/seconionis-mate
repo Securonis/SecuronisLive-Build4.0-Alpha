@@ -1,0 +1,12 @@
+Cmnd_Alias SECONIONIS_MATE = \
+    /etc/init.d/tor-router start, \
+    /etc/init.d/tor-router stop, \
+    /etc/init.d/tor-router reload, \
+    /etc/init.d/tor-router restart, \
+    /etc/init.d/tor-router status, \
+    /usr/bin/xdg-open /etc/default/tor-router, \
+    /usr/share/tor-router/sbin/tor-router-status
+
+Defaults!SECONIONIS_MATE !syslog, !pam_session
+
+%sudo ALL=(ALL) NOPASSWD: SECONIONIS_MATE

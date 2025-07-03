@@ -1,0 +1,6 @@
+#!/bin/bash
+if pgrep -x "seconionis-mate" > /dev/null; then
+    exit 0  
+else
+    seconionis-mate &
+fi

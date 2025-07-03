@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Securonis Mac Changer
+Comment=Securonis MAC Changer allows you to easily change your MAC address
+Exec=notesgui
+Icon=/usr/share/icons/securonis/maconis.png
+Terminal=false 
+Type=Application
+Categories=Securonis;Securonis;

@@ -16,7 +16,7 @@ systemctl enable hardened-securonis-extra.service
 
 systemctl enable armor-hardening.service
 
-#systemctl enable seconionis-autostart.service
+systemctl enable seconionis-autowipe.service
 
 # Network security services
 systemctl enable root0-network-ipv4-icmp.service

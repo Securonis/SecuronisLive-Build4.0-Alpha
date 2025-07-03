@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Seconionis
+Exec=seconionis-mate
+OnlyShowIn=MATE;
+StartupNotify=false
+Terminal=false

@@ -1,0 +1,64 @@
+import subprocess
+import tkinter as tk
+from tkinter import ttk, messagebox
+
+# --- Functions ---
+def change_mac():
+    warn_label.config(text="Changing MAC addresses...")
+    root.update()
+
+    # Get all interfaces except lo
+    result = subprocess.run(["ip", "-o", "link", "show"], capture_output=True, text=True)
+    interfaces = [line.split(': ')[1] for line in result.stdout.strip().split('\n')]
+
+    for iface in interfaces:
+        if iface != "lo":
+            subprocess.run(["ip", "link", "set", iface, "down"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(["macchanger", "-r", iface], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(["ip", "link", "set", iface, "up"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    warn_label.config(text="MAC addresses changed successfully.")
+    messagebox.showinfo("Info", "MAC addresses changed.")
+
+def revert_mac():
+    warn_label.config(text="Reverting MAC addresses...")
+    root.update()
+
+    result = subprocess.run(["ip", "-o", "link", "show"], capture_output=True, text=True)
+    interfaces = [line.split(': ')[1] for line in result.stdout.strip().split('\n')]
+
+    for iface in interfaces:
+        if iface != "lo":
+            subprocess.run(["ip", "link", "set", iface, "down"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(["macchanger", "-p", iface], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(["ip", "link", "set", iface, "up"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    warn_label.config(text="MAC addresses reverted successfully.")
+    messagebox.showinfo("Info", "MAC addresses reverted.")
+
+# --- GUI ---
+root = tk.Tk()
+root.title("Securonis MAC Address Changer")
+root.geometry("500x150")
+root.configure(bg="#2e2e2e")
+
+style = ttk.Style()
+style.theme_use('clam')
+style.configure("TButton", foreground="white", background="#444444", font=("Arial", 12), padding=10)
+style.map("TButton",
+          foreground=[('pressed', 'white'), ('active', 'white')],
+          background=[('pressed', '#666666'), ('active', '#555555')])
+
+warn_label = tk.Label(root, text="", fg="white", bg="#2e2e2e", font=("Arial", 12))
+warn_label.pack(pady=10)
+
+frame = tk.Frame(root, bg="#2e2e2e")
+frame.pack(pady=20)
+
+btn_change = ttk.Button(frame, text="Change MAC Addresses", command=change_mac)
+btn_change.grid(row=0, column=0, padx=10)
+
+btn_revert = ttk.Button(frame, text="Revert MAC Addresses", command=revert_mac)
+btn_revert.grid(row=0, column=1, padx=10)
+
+root.mainloop()
