@@ -18,6 +18,8 @@ systemctl enable armor-hardening.service
 
 systemctl enable seconionis-autowipe.service
 
+sudo ufw enable
+
 # Network security services
 systemctl enable root0-network-ipv4-icmp.service
 systemctl enable root0-network-ipv4-martians.service
