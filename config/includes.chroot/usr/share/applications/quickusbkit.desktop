@@ -1,10 +1,23 @@
 [Desktop Entry]
 Version=1.0
 Name=Quick-USBKit
-Comment=Quick-USBKit is a versatile tool designed to simplify and streamline the management of USB devices on Linux systems
+Comment=Quick-USBKit is a versatile tool designed to simplify and streamline the management of USB devices
+Comment[tr]=Quick-USBKit, USB cihazlarının yönetimini basitleştirmek ve kolaylaştırmak için tasarlanmış çok yönlü bir araçtır
+Comment[es]=Quick-USBKit es una herramienta versátil diseñada para simplificar y agilizar la gestión de dispositivos USB
+Comment[fr]=Quick-USBKit est un outil polyvalent conçu pour simplifier et rationaliser la gestion des périphériques USB
+Comment[de]=Quick-USBKit ist ein vielseitiges Werkzeug zur Vereinfachung und Optimierung der Verwaltung von USB-Geräten
+Comment[ar]=Quick-USBKit هو أداة متعددة الاستخدامات مصممة لتبسيط وتسهيل إدارة أجهزة USB
+Comment[ru]=Quick-USBKit — универсальный инструмент для упрощения и оптимизации управления USB-устройствами
+Comment[zh]=Quick-USBKit 是一款多功能工具，旨在简化和优化 USB 设备的管理
+Comment[ja]=Quick-USBKitはUSBデバイスの管理を簡素化および効率化するために設計された多用途ツールです
+Comment[ko]=Quick-USBKit은 USB 장치 관리를 간소화하고 효율화하도록 설계된 다목적 도구입니다
+Comment[pt]=Quick-USBKit é uma ferramenta versátil projetada para simplificar e agilizar o gerenciamento de dispositivos USB
+Comment[it]=Quick-USBKit è uno strumento versatile progettato per semplificare e ottimizzare la gestione dei dispositivi USB
+Comment[nl]=Quick-USBKit is een veelzijdige tool ontworpen om het beheer van USB-apparaten te vereenvoudigen en te stroomlijnen
+Comment[sv]=Quick-USBKit är ett mångsidigt verktyg utformat för att förenkla och effektivisera hanteringen av USB-enheter
+Comment[pl]=Quick-USBKit to wszechstronne narzędzie zaprojektowane, aby uprościć i usprawnić zarządzanie urządzeniami USB
 Exec=quick-usbkitgui
 Icon=/usr/share/icons/securonis/icon4.png
 Terminal=false
 Type=Application
 Categories=Utility;
-

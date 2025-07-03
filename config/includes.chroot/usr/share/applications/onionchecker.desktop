@@ -1,10 +1,23 @@
 [Desktop Entry]
-Name=Onion Checker 
+Name=Onion Checker
 Comment=Monitor Tor circuits and connections
+Comment[tr]=Tor devrelerini ve bağlantılarını izler
+Comment[es]=Monitorea circuitos y conexiones de Tor
+Comment[fr]=Surveille les circuits et connexions Tor
+Comment[de]=Überwacht Tor-Schaltungen und Verbindungen
+Comment[ar]=مراقبة دوائر واتصالات Tor
+Comment[ru]=Мониторинг цепочек и соединений Tor
+Comment[zh]=监控Tor电路和连接
+Comment[ja]=Tor回線と接続を監視する
+Comment[ko]=Tor 회로 및 연결 모니터링
+Comment[pt]=Monitora circuitos e conexões Tor
+Comment[it]=Monitora circuiti e connessioni Tor
+Comment[nl]=Controleert Tor-circuits en verbindingen
+Comment[sv]=Övervakar Tor-kretsar och anslutningar
+Comment[pl]=Monitoruje obwody i połączenia Tor
 Exec=pkexec onionchecker
 StartupNotify=true
 Terminal=false
 Type=Application
 Icon=/usr/share/icons/securonis/node.png
 Categories=GTK;Network;
-

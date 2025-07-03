@@ -1,7 +1,21 @@
 [Desktop Entry]
 Version=1.0
 Name=Paranoia
-Comment=Paranoia is a security mode that blocks all network connections, completely isolating the system from the outside world while maximizing kernel-level security settings
+Comment=Paranoia is a security mode that blocks all network connections, completely isolating the system from the outside world while maximizing network security settings
+Comment[tr]=Paranoia, tüm ağ bağlantılarını engelleyen, sistemi dış dünyadan tamamen izole eden ve ağ güvenlik ayarlarını maksimuma çıkaran bir güvenlik modudur
+Comment[es]=Paranoia es un modo de seguridad que bloquea todas las conexiones de red, aislando completamente el sistema del mundo exterior mientras maximiza la configuración de seguridad de la red
+Comment[fr]=Paranoia est un mode de sécurité qui bloque toutes les connexions réseau, isolant complètement le système du monde extérieur tout en maximisant les paramètres de sécurité réseau
+Comment[de]=Paranoia ist ein Sicherheitsmodus, der alle Netzwerkverbindungen blockiert, das System vollständig von der Außenwelt isoliert und die Netzwerksicherheit maximiert
+Comment[ar]=Paranoia هو وضع أمني يحظر جميع اتصالات الشبكة، ويعزل النظام تمامًا عن العالم الخارجي مع تعظيم إعدادات أمان الشبكة
+Comment[ru]=Paranoia — это режим безопасности, который блокирует все сетевые подключения, полностью изолируя систему от внешнего мира и максимально усиливая настройки сетевой безопасности
+Comment[zh]=Paranoia 是一种安全模式，阻止所有网络连接，完全隔离系统与外部世界，同时最大化网络安全设置
+Comment[ja]=Paranoiaはすべてのネットワーク接続をブロックし、システムを外部から完全に隔離しながら、ネットワークセキュリティ設定を最大化するセキュリティモードです
+Comment[ko]=Paranoia는 모든 네트워크 연결을 차단하고 시스템을 외부 세계와 완전히 격리하면서 네트워크 보안 설정을 최대화하는 보안 모드입니다
+Comment[pt]=Paranoia é um modo de segurança que bloqueia todas as conexões de rede, isolando completamente o sistema do mundo externo enquanto maximiza as configurações de segurança da rede
+Comment[it]=Paranoia è una modalità di sicurezza che blocca tutte le connessioni di rete, isolando completamente il sistema dal mondo esterno massimizzando le impostazioni di sicurezza della rete
+Comment[nl]=Paranoia is een beveiligingsmodus die alle netwerkverbindingen blokkeert, het systeem volledig isoleert van de buitenwereld en de netwerkinstellingen maximaliseert
+Comment[sv]=Paranoia är ett säkerhetsläge som blockerar alla nätverksanslutningar, isolerar systemet helt från omvärlden samtidigt som nätverkssäkerhetsinställningarna maximeras
+Comment[pl]=Paranoia to tryb bezpieczeństwa, który blokuje wszystkie połączenia sieciowe, całkowicie izolując system od świata zewnętrznego przy maksymalnym ustawieniu zabezpieczeń sieci
 Exec=mate-terminal -- bash -c "sudo /usr/local/bin/paranoia; exec bash"
 Icon=/usr/share/icons/securonis/paranoia.png
 Terminal=true

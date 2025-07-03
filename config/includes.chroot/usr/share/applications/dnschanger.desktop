@@ -1,6 +1,20 @@
 [Desktop Entry]
-Name=SecDNSChanger 
+Name=SecDNSChanger
 Comment=Simple DNS address changer tool
+Comment[tr]=Basit DNS adres değiştirme aracı
+Comment[es]=Herramienta sencilla para cambiar direcciones DNS
+Comment[fr]=Outil simple pour changer l'adresse DNS
+Comment[de]=Einfaches Werkzeug zum Ändern der DNS-Adresse
+Comment[ar]=أداة بسيطة لتغيير عنوان DNS
+Comment[ru]=Простая утилита для смены DNS-адреса
+Comment[zh]=简单的DNS地址更改工具
+Comment[ja]=シンプルなDNSアドレス変更ツール
+Comment[ko]=간단한 DNS 주소 변경 도구
+Comment[pt]=Ferramenta simples para alterar endereços DNS
+Comment[it]=Semplice strumento per cambiare l'indirizzo DNS
+Comment[nl]=Eenvoudige tool om het DNS-adres te wijzigen
+Comment[sv]=Enkelt verktyg för att ändra DNS-adress
+Comment[pl]=Proste narzędzie do zmiany adresu DNS
 Exec=dnschanger
 StartupNotify=true
 Terminal=false

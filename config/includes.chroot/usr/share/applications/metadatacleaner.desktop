@@ -2,9 +2,22 @@
 Version=1.0
 Name=Securonis Metadata Cleaner
 Comment=A tool for removing metadata from files and photos
+Comment[tr]=Dosya ve fotoğraflardaki meta verileri temizleme aracı
+Comment[es]=Una herramienta para eliminar metadatos de archivos y fotos
+Comment[fr]=Un outil pour supprimer les métadonnées des fichiers et photos
+Comment[de]=Ein Werkzeug zum Entfernen von Metadaten aus Dateien und Fotos
+Comment[ar]=أداة لإزالة البيانات الوصفية من الملفات والصور
+Comment[ru]=Инструмент для удаления метаданных из файлов и фотографий
+Comment[zh]=用于删除文件和照片元数据的工具
+Comment[ja]=ファイルや写真からメタデータを削除するツール
+Comment[ko]=파일 및 사진에서 메타데이터를 제거하는 도구
+Comment[pt]=Uma ferramenta para remover metadados de arquivos e fotos
+Comment[it]=Uno strumento per rimuovere i metadati da file e foto
+Comment[nl]=Een tool voor het verwijderen van metadata uit bestanden en foto's
+Comment[sv]=Ett verktyg för att ta bort metadata från filer och foton
+Comment[pl]=Narzędzie do usuwania metadanych z plików i zdjęć
 Exec=metadatacleaner
 Icon=/usr/share/icons/securonis/metadata.png
-Terminal=false 
+Terminal=false
 Type=Application
 Categories=Utility;
-

@@ -2,9 +2,22 @@
 Version=1.0
 Name=PhysicalSec
 Comment=Physical Security mode is a security mechanism that hardens the system against physical access and hardware-based attacks
+Comment[tr]=Fiziksel Güvenlik modu, sistemi fiziksel erişim ve donanım tabanlı saldırılara karşı güçlendiren bir güvenlik mekanizmasıdır
+Comment[es]=El modo de seguridad física es un mecanismo que fortalece el sistema contra accesos físicos y ataques basados en hardware
+Comment[fr]=Le mode de sécurité physique est un mécanisme qui renforce le système contre les accès physiques et les attaques matérielles
+Comment[de]=Der physische Sicherheitsmodus ist ein Mechanismus, der das System gegen physischen Zugriff und hardwarebasierte Angriffe absichert
+Comment[ar]=وضع الأمان الفيزيائي هو آلية أمان تقوي النظام ضد الوصول المادي والهجمات القائمة على الأجهزة
+Comment[ru]=Режим физической безопасности — это механизм, который укрепляет систему против физического доступа и атак на основе оборудования
+Comment[zh]=物理安全模式是一种增强系统防范物理访问和基于硬件攻击的安全机制
+Comment[ja]=物理セキュリティモードは、物理的アクセスやハードウェアベースの攻撃からシステムを強化するセキュリティ機構です
+Comment[ko]=물리적 보안 모드는 물리적 접근 및 하드웨어 기반 공격에 대비하여 시스템을 강화하는 보안 메커니즘입니다
+Comment[pt]=O modo de segurança física é um mecanismo que reforça o sistema contra acesso físico e ataques baseados em hardware
+Comment[it]=La modalità di sicurezza fisica è un meccanismo che rafforza il sistema contro l'accesso fisico e gli attacchi basati sull'hardware
+Comment[nl]=De fysieke beveiligingsmodus is een beveiligingsmechanisme dat het systeem versterkt tegen fysieke toegang en hardware-aanvallen
+Comment[sv]=Fysisk säkerhetsläge är en säkerhetsmekanism som stärker systemet mot fysisk åtkomst och hårdvarubaserade attacker
+Comment[pl]=Tryb fizycznego bezpieczeństwa to mechanizm zabezpieczający system przed fizycznym dostępem i atakami sprzętowymi
 Exec=mate-terminal -- bash -c "sudo /usr/local/bin/physicalsec; exec bash"
 Icon=/usr/share/icons/securonis/PhysicalSec.png
 Terminal=true
 Type=Application
 Categories=Qt;System;
-
