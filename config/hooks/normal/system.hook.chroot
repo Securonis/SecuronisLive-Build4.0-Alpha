@@ -10,15 +10,13 @@ systemctl enable securonis-firstboot.service
 
 systemctl enable haveged
 
-systemctl enable securonis-anti-ipspoof.service
-
 systemctl enable hardened-securonis-extra.service
 
 systemctl enable armor-hardening.service
 
 systemctl enable seconionis-autowipe.service
 
-sudo ufw enable
+ufw enable
 
 # Network security services
 systemctl enable root0-network-ipv4-icmp.service
