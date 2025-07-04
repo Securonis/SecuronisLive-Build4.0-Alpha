@@ -444,14 +444,12 @@ disable_autowipe() {
 autostart() {
     warn "Enabling seconionis-autostart..."
     systemctl enable seconionis-autostart &>"/dev/null"
-    systemctl start seconionis-autostart &>"/dev/null"
     msg "Enabled seconionis-autostart"
 }
 
 disable_autostart() {
     warn "Disabling seconionis-autostart..."
     systemctl disable seconionis-autostart &>"/dev/null"
-    systemctl stop seconionis-autostart &>"/dev/null"
     msg "Disabled seconionis-autostart"
 }
 
@@ -482,11 +480,13 @@ main() {
     start)
         check_root
         check_backup_dir
+        start
         autostart
         ;;
     stop)
         check_root
         check_backup_dir
+        stop
         disable_autostart
         ;;
     status)

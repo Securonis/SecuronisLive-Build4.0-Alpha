@@ -4,10 +4,6 @@ import os
 import sys
 import subprocess
 import logging
-from pathlib import Path
-import pwd
-import grp
-import stat
 
 # Logging configuration
 logging.basicConfig(
@@ -38,13 +34,11 @@ class SystemHardening:
             '/etc/group': (0o644, 0, 0),   # root:root, readable but not writable by others
             '/etc/gshadow': (0o600, 0, 0), # root:root, no access for others
             '/etc/sudoers': (0o440, 0, 0), # root:root, readable by sudo group
-            '/etc/ssh/sshd_config': (0o600, 0, 0), # root:root, no access for others
             '/etc/hosts': (0o644, 0, 0),   # root:root, readable but not writable by others
         }
         
         # Critical directories that should be restricted
         critical_dirs = {
-            '/etc/ssh': (0o755, 0, 0),      # root:root, readable by others
             '/etc/sudoers.d': (0o750, 0, 0), # root:root, readable by sudo group
             '/root': (0o700, 0, 0),          # root:root, no access for others
             '/var/log': (0o755, 0, 0),       # root:root, readable by others
@@ -88,28 +82,6 @@ class SystemHardening:
             except Exception as e:
                 self.logger.error(f"Error securing directory {path}: {str(e)}")
 
-    def secure_ssh(self):
-        """Configures basic SSH security without restricting normal usage"""
-        ssh_config = '/etc/ssh/sshd_config'
-        secure_settings = [
-            'Protocol 2',
-            'MaxAuthTries 6',
-            'LoginGraceTime 120',
-            'PermitEmptyPasswords no',
-            'StrictModes yes',
-            'IgnoreRhosts yes'
-        ]
-        
-        try:
-            with open(ssh_config, 'a') as f:
-                f.write('\n# Basic security settings added by Armor Hardening\n')
-                for setting in secure_settings:
-                    f.write(f"{setting}\n")
-            self.logger.info("SSH configuration updated")
-            subprocess.run(['systemctl', 'restart', 'ssh'], check=True)
-        except Exception as e:
-            self.logger.error(f"Failed to update SSH configuration: {str(e)}")
-
     def secure_umask(self):
         """Sets secure but usable default permissions for new files"""
         umask_files = ['/etc/profile', '/etc/bash.bashrc']
@@ -129,11 +101,10 @@ class SystemHardening:
         self.logger.info("Starting system hardening...")
         
         self.secure_file_permissions()
-        self.secure_ssh()
         self.secure_umask()
         
         self.logger.info("System hardening completed successfully.")
 
 if __name__ == "__main__":
     hardening = SystemHardening()
-    hardening.run() 
+    hardening.run()
