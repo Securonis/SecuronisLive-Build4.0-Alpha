@@ -31,7 +31,7 @@ def main():
 
 def status_update(indicator):
 
-  status = subprocess.check_output("sudo  /usr/share/tor-router/sbin/tor-router-status", shell=True)
+  status = subprocess.check_output("sudo  /usr/share/seconionis/seconionis-status", shell=True)
 
   if status == b'offline':
     indicator.set_icon(indicator.ICON_OFFLINE)
@@ -79,7 +79,8 @@ def menu(indicator):
   indicator.MENU_TORCHK    = os.environ['MENU_TORCHK']    if 'MENU_TORCHK'    in os.environ else _('Show IP Address')
   indicator.MENU_RELOAD    = os.environ['MENU_RELOAD']    if 'MENU_RELOAD'    in os.environ else _('Switch IP Address')
   indicator.MENU_STATUS    = os.environ['MENU_STATUS']    if 'MENU_STATUS'    in os.environ else _('Status')
-  indicator.MENU_SETTINGS  = os.environ['MENU_SETTINGS']  if 'MENU_SETTINGS'  in os.environ else _('Settings')
+  indicator.MENU_CHANGEMAC = os.environ['MENU_CHANGEMAC'] if 'MENU_CHANGEMAC' in os.environ else _('Change MAC Address')
+  indicator.MENU_REVERTMAC = os.environ['MENU_REVERTMAC'] if 'MENU_REVERTMAC' in os.environ else _('Revert MAC Address')
   indicator.MENU_ABOUT     = os.environ['MENU_ABOUT']     if 'MENU_ABOUT'     in os.environ else _('About')
   indicator.MENU_EXIT      = os.environ['MENU_EXIT']      if 'MENU_EXIT'      in os.environ else _('Exit')
 
@@ -108,9 +109,13 @@ def menu(indicator):
   menuitem_status.connect('activate', tor_router_status)
   menu.append(menuitem_status)
 
-  menuitem_settings = gtk.MenuItem(indicator.MENU_SETTINGS)
-  menuitem_settings.connect('activate', tor_router_settings)
-  menu.append(menuitem_settings)
+  menuitem_changemac = gtk.MenuItem(indicator.MENU_CHANGEMAC)
+  menuitem_changemac.connect('activate', tor_router_changemac)
+  menu.append(menuitem_changemac)
+
+  menuitem_revertmac = gtk.MenuItem(indicator.MENU_REVERTMAC)
+  menuitem_revertmac.connect('activate', tor_router_revertmac)
+  menu.append(menuitem_revertmac)
 
   menuitem_separator2 = gtk.SeparatorMenuItem()
   menu.append(menuitem_separator2)
@@ -132,7 +137,7 @@ def menu(indicator):
   return menu
 
 def tor_router_start(menuitem):
-  process = subprocess.Popen(['sudo', '/etc/init.d/tor-router', 'start'], stdout=subprocess.PIPE)
+  process = subprocess.Popen(['sudo', '/usr/bin/seconionis', 'start'], stdout=subprocess.PIPE)
   stdout = process.communicate()[0]
 
   print(stdout.decode('utf-8'))
@@ -152,7 +157,7 @@ def tor_router_start(menuitem):
   notification.show()
 
 def tor_router_stop(menuitem):
-  process = subprocess.Popen(['sudo', '/etc/init.d/tor-router', 'stop'], stdout=subprocess.PIPE)
+  process = subprocess.Popen(['sudo', '/usr/bin/seconionis', 'stop'], stdout=subprocess.PIPE)
   stdout = process.communicate()[0]
 
   print(stdout.decode('utf-8'))
@@ -183,7 +188,7 @@ def tor_router_torchk(menuitem):
   web_browser_thread.start()
 
 def tor_router_reload(menuitem):
-  process = subprocess.Popen(['sudo', '/etc/init.d/tor-router', 'reload'], stdout=subprocess.PIPE)
+  process = subprocess.Popen(['sudo', '/usr/bin/seconionis', 'restart'], stdout=subprocess.PIPE)
   stdout = process.communicate()[0]
 
   print(stdout.decode('utf-8'))
@@ -203,7 +208,7 @@ def tor_router_reload(menuitem):
   notification.show()
 
 def tor_router_status(menuitem):
-  process = subprocess.Popen(['sudo', '/etc/init.d/tor-router', 'status'], stdout=subprocess.PIPE)
+  process = subprocess.Popen(['sudo', '/usr/bin/seconionis', 'status'], stdout=subprocess.PIPE)
   stdout = process.communicate()[0]
 
   if process.returncode == 0:
@@ -220,9 +225,45 @@ def tor_router_status(menuitem):
   notification.set_timeout(5000)
   notification.show()
 
-def tor_router_settings(menuitem):
-  with open(os.devnull, 'w') as devnull:
-    subprocess.Popen(['sudo', 'xdg-open', '/etc/default/tor-router'], stdout=devnull, stderr=devnull)
+def tor_router_changemac(menuitem):
+  process = subprocess.Popen(['sudo', '/usr/bin/seconionis', 'changemac'], stdout=subprocess.PIPE)
+  stdout = process.communicate()[0]
+
+  print(stdout.decode('utf-8'))
+
+  if process.returncode == 0:
+    notification = Notify.Notification.new(_('MAC addresses changed'), stdout.decode('utf-8'))
+  else:
+    notification = Notify.Notification.new(_('Failed to change MAC addresses'), stdout.decode('utf-8'))
+
+  image = GdkPixbuf.Pixbuf.new_from_file(menuitem.get_parent().indicator.APP_ICON)
+
+  notification.set_hint('resident', glib.Variant.new_boolean(False))
+  notification.set_hint('transient', glib.Variant.new_boolean(True))
+  notification.set_icon_from_pixbuf(image)
+  notification.set_image_from_pixbuf(image)
+  notification.set_timeout(5000)
+  notification.show()
+
+def tor_router_revertmac(menuitem):
+  process = subprocess.Popen(['sudo', '/usr/bin/seconionis', 'revertmac'], stdout=subprocess.PIPE)
+  stdout = process.communicate()[0]
+
+  print(stdout.decode('utf-8'))
+
+  if process.returncode == 0:
+    notification = Notify.Notification.new(_('MAC addresses reverted'), stdout.decode('utf-8'))
+  else:
+    notification = Notify.Notification.new(_('Failed to revert MAC addresses'), stdout.decode('utf-8'))
+
+  image = GdkPixbuf.Pixbuf.new_from_file(menuitem.get_parent().indicator.APP_ICON)
+
+  notification.set_hint('resident', glib.Variant.new_boolean(False))
+  notification.set_hint('transient', glib.Variant.new_boolean(True))
+  notification.set_icon_from_pixbuf(image)
+  notification.set_image_from_pixbuf(image)
+  notification.set_timeout(5000)
+  notification.show()
 
 def dialog_about(menuitem):
 
@@ -259,4 +300,3 @@ def quit(menuitem):
 
 if __name__ == "__main__":
   main()
-

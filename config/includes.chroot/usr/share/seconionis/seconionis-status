@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Seconionis status checker
+
+BACKUPDIR="/var/lib/seconionis"
+
+if ! ip -4 route list 0/0 >/dev/null 2>&1; then
+  echo -n "offline"
+  exit 0
+fi
+
+
+if [ ! -f "$BACKUPDIR/started" ]; then
+  echo -n "stopped"
+  exit 0
+fi
+
+TORSTATUS=$(systemctl is-active tor 2>/dev/null)
+
+if [ "$TORSTATUS" = "active" ]; then
+  echo -n "enabled"
+else
+  echo -n "disabled"
+fi
+
+exit 0
