@@ -249,9 +249,6 @@ EOF
 apply_iptables_rules() {
     info "Applying iptables rules..."
 
-apply_iptables_rules() {
-    info "Applying iptables rules..."
-
     # NAT table
     iptables -t nat -F
 
