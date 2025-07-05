@@ -1,0 +1,4 @@
+#!/bin/bash
+search="$1"
+replace="$2"
+sed "s/${search}/${replace}/g"

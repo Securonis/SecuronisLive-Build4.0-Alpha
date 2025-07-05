@@ -48,10 +48,10 @@ def status_update(indicator):
   elif status == b'stopped':
     indicator.set_icon(indicator.ICON_STOPPED)
     indicator.set_label(indicator.LABEL_STOPPED, 'customtray')
-    indicator.menuitem_start.set_sensitive(False)
-    indicator.menuitem_stop.set_sensitive(True)
-    indicator.menuitem_reload.set_sensitive(True)
-  else:
+    indicator.menuitem_start.set_sensitive(True)
+    indicator.menuitem_stop.set_sensitive(False)
+    indicator.menuitem_reload.set_sensitive(False)
+  else:  # enabled
     indicator.set_icon(indicator.ICON_ENABLED)
     indicator.set_label(indicator.LABEL_ENABLED, 'customtray')
     indicator.menuitem_start.set_sensitive(False)

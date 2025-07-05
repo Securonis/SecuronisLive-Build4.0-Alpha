@@ -254,7 +254,7 @@ apply_iptables_rules() {
 
     iptables -t nat -A OUTPUT -m owner --uid-owner $TOR_UID -j RETURN
 
-    iptables -t nat -A OUTPUT -d 127.0.0.1/32 -p udp --dport 53 -j REDIRECT --to-ports "$DNS_PORT"
+    iptables -t nat -A OUTPUT -d 127.0.0.1/32 -p udp --dport 53 -j REDIRECT --to-ports "$TOR_DNS"
 
     iptables -t nat -A OUTPUT -p tcp -d 10.192.0.0/10 -j REDIRECT --to-ports "$TOR_PORT"
     iptables -t nat -A OUTPUT -p udp -d 10.192.0.0/10 -j REDIRECT --to-ports "$TOR_PORT"
