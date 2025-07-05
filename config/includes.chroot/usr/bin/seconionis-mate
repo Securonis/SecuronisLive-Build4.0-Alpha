@@ -8,6 +8,9 @@ import gettext
 import threading
 import webbrowser
 
+# Configuration
+TOR_PORT = "9040"
+
 # Initialize gettext for translations
 gettext.bindtextdomain('seconionis', '/usr/share/locale')
 gettext.textdomain('seconionis')
@@ -79,6 +82,7 @@ def menu(indicator):
   indicator.MENU_TORCHK    = os.environ['MENU_TORCHK']    if 'MENU_TORCHK'    in os.environ else _('Show IP Address')
   indicator.MENU_RELOAD    = os.environ['MENU_RELOAD']    if 'MENU_RELOAD'    in os.environ else _('Switch IP Address')
   indicator.MENU_STATUS    = os.environ['MENU_STATUS']    if 'MENU_STATUS'    in os.environ else _('Status')
+  indicator.MENU_RESTART   = os.environ['MENU_RESTART']   if 'MENU_RESTART'   in os.environ else _('Restart Router')
   indicator.MENU_CHANGEMAC = os.environ['MENU_CHANGEMAC'] if 'MENU_CHANGEMAC' in os.environ else _('Change MAC Address')
   indicator.MENU_REVERTMAC = os.environ['MENU_REVERTMAC'] if 'MENU_REVERTMAC' in os.environ else _('Revert MAC Address')
   indicator.MENU_ABOUT     = os.environ['MENU_ABOUT']     if 'MENU_ABOUT'     in os.environ else _('About')
@@ -108,6 +112,10 @@ def menu(indicator):
   menuitem_status = gtk.MenuItem(indicator.MENU_STATUS)
   menuitem_status.connect('activate', tor_router_status)
   menu.append(menuitem_status)
+
+  menuitem_restart = gtk.MenuItem(indicator.MENU_RESTART)
+  menuitem_restart.connect('activate', tor_router_restart)
+  menu.append(menuitem_restart)
 
   menuitem_changemac = gtk.MenuItem(indicator.MENU_CHANGEMAC)
   menuitem_changemac.connect('activate', tor_router_changemac)
@@ -188,13 +196,13 @@ def tor_router_torchk(menuitem):
   web_browser_thread.start()
 
 def tor_router_reload(menuitem):
-  process = subprocess.Popen(['sudo', '/usr/bin/seconionis', 'changeip'], stdout=subprocess.PIPE)
+  process = subprocess.Popen(['sudo', '/usr/bin/seconionis', 'changeid'], stdout=subprocess.PIPE)
   stdout = process.communicate()[0]
 
   print(stdout.decode('utf-8'))
 
   if process.returncode == 0:
-    notification = Notify.Notification.new(_('IP address changed successfully'), stdout.decode('utf-8'))
+    notification = Notify.Notification.new(_('Seconionis IP address changed'), stdout.decode('utf-8'))
   else:
     notification = Notify.Notification.new(_('Seconionis failed to change IP address'), stdout.decode('utf-8'))
 
@@ -208,22 +216,56 @@ def tor_router_reload(menuitem):
   notification.show()
 
 def tor_router_status(menuitem):
-  process = subprocess.Popen(['sudo', '/usr/bin/seconionis', 'status'], stdout=subprocess.PIPE)
-  stdout = process.communicate()[0]
+    try:
+        # Check Tor service status
+        tor_status = subprocess.check_output(['systemctl', 'is-active', 'tor'], stderr=subprocess.PIPE).decode().strip()
+        
+        # Check Seconionis autostart service status
+        autostart_status = subprocess.check_output(['systemctl', 'is-active', 'seconionis-autostart'], stderr=subprocess.PIPE).decode().strip()
+        
+        # Check if traffic is actually being routed through Tor
+        iptables_check = subprocess.run(['sudo', 'iptables-save'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        routing_active = 'REDIRECT' in iptables_check.stdout.decode() and str(TOR_PORT) in iptables_check.stdout.decode()
 
-  if process.returncode == 0:
-    notification = Notify.Notification.new(_('Seconionis is running'), _('All system traffic is being routed through the Tor network'))
-  else:
-    notification = Notify.Notification.new(_('Seconionis is not running'), _('Traffic is NOT routed through Tor network'))
+        status_msg = f"Tor Service: {tor_status.upper()}\n"
+        status_msg += f"Seconionis Service: {autostart_status.upper()}\n"
+        status_msg += f"Traffic Routing: {'ACTIVE' if routing_active else 'INACTIVE'}"
 
-  image = GdkPixbuf.Pixbuf.new_from_file(menuitem.get_parent().indicator.ICON_ENABLED)
+        if tor_status == 'active' and autostart_status == 'active' and routing_active:
+            title = _('Seconionis is fully operational')
+        else:
+            title = _('Seconionis has issues')
 
-  notification.set_hint('resident', glib.Variant.new_boolean(False))
-  notification.set_hint('transient', glib.Variant.new_boolean(True))
-  notification.set_icon_from_pixbuf(image)
-  notification.set_image_from_pixbuf(image)
-  notification.set_timeout(5000)
-  notification.show()
+        notification = Notify.Notification.new(title, status_msg)
+    except Exception as e:
+        notification = Notify.Notification.new(_('Status check failed'), str(e))
+
+    image = GdkPixbuf.Pixbuf.new_from_file(menuitem.get_parent().indicator.APP_ICON)
+    notification.set_hint('resident', glib.Variant.new_boolean(False))
+    notification.set_hint('transient', glib.Variant.new_boolean(True))
+    notification.set_icon_from_pixbuf(image)
+    notification.set_image_from_pixbuf(image)
+    notification.set_timeout(6000)  # Show for 6 seconds
+    notification.show()
+
+def tor_router_restart(menuitem):
+    process = subprocess.Popen(['sudo', '/usr/bin/seconionis', 'restart'], stdout=subprocess.PIPE)
+    stdout = process.communicate()[0]
+
+    print(stdout.decode('utf-8'))
+
+    if process.returncode == 0:
+        notification = Notify.Notification.new(_('Seconionis router restarted'), stdout.decode('utf-8'))
+    else:
+        notification = Notify.Notification.new(_('Failed to restart Seconionis router'), stdout.decode('utf-8'))
+
+    image = GdkPixbuf.Pixbuf.new_from_file(menuitem.get_parent().indicator.ICON_ENABLED)
+    notification.set_hint('resident', glib.Variant.new_boolean(False))
+    notification.set_hint('transient', glib.Variant.new_boolean(True))
+    notification.set_icon_from_pixbuf(image)
+    notification.set_image_from_pixbuf(image)
+    notification.set_timeout(5000)
+    notification.show()
 
 def tor_router_changemac(menuitem):
   process = subprocess.Popen(['sudo', '/usr/bin/seconionis', 'changemac'], stdout=subprocess.PIPE)
