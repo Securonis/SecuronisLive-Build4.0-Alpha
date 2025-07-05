@@ -1,14 +1,16 @@
 [Unit]
-Description="Seconionis Tor Traffic Routing"
-Before=poweroff.target reboot.target tor.service
-After=network.target
-Wants=tor.service
+Description=Seconionis Tor Traffic Routing
+After=network-online.target tor.service
+Wants=network-online.target tor.service
+Requires=tor.service
 
 [Service]
+Type=oneshot
 ExecStart=/usr/bin/seconionis start
-ExecReload=/usr/bin/seconionis restart
 ExecStop=/usr/bin/seconionis stop
 RemainAfterExit=yes
+TimeoutStartSec=60
+TimeoutStopSec=60
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target

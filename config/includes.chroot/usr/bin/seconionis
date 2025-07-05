@@ -120,6 +120,11 @@ stop_service() {
 
 is_started() {
     if [ -e $BACKUPDIR/started ]; then
+        # Check if tor is actually running and rules are applied
+        if ! systemctl is-active --quiet tor || ! iptables-save | grep -q "REDIRECT.*$TOR_PORT"; then
+            rm -f $BACKUPDIR/started
+            return 1
+        fi
         return 0
     fi
     return 1
@@ -311,7 +316,13 @@ apply_sysctl_rules() {
 
 start() {
     if is_started; then
-        err "Seconionis is already started"
+        # Double check if tor is actually running and rules are applied
+        if systemctl is-active --quiet tor && iptables-save | grep -q "REDIRECT.*$TOR_PORT"; then
+            err "Seconionis is already started and running correctly"
+        else
+            warn "Seconionis status file exists but service is not running properly"
+            rm -f $BACKUPDIR/started
+        fi
     fi
 
     backup_torrc
