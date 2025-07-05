@@ -188,15 +188,15 @@ def tor_router_torchk(menuitem):
   web_browser_thread.start()
 
 def tor_router_reload(menuitem):
-  process = subprocess.Popen(['sudo', '/usr/bin/seconionis', 'restart'], stdout=subprocess.PIPE)
+  process = subprocess.Popen(['sudo', '/usr/bin/seconionis', 'changeip'], stdout=subprocess.PIPE)
   stdout = process.communicate()[0]
 
   print(stdout.decode('utf-8'))
 
   if process.returncode == 0:
-    notification = Notify.Notification.new(_('Seconionis reloaded'), stdout.decode('utf-8'))
+    notification = Notify.Notification.new(_('IP address changed successfully'), stdout.decode('utf-8'))
   else:
-    notification = Notify.Notification.new(_('Seconionis failed to reload'), stdout.decode('utf-8'))
+    notification = Notify.Notification.new(_('Seconionis failed to change IP address'), stdout.decode('utf-8'))
 
   image = GdkPixbuf.Pixbuf.new_from_file(menuitem.get_parent().indicator.ICON_ENABLED)
 
@@ -212,9 +212,9 @@ def tor_router_status(menuitem):
   stdout = process.communicate()[0]
 
   if process.returncode == 0:
-    notification = Notify.Notification.new(_('Seconionis is running'), _('All system traffic is being routed through the Tor network.'))
+    notification = Notify.Notification.new(_('Seconionis is running'), _('All system traffic is being routed through the Tor network'))
   else:
-    notification = Notify.Notification.new(_('Seconionis is not running'), _('Traffic is NOT routed through Tor.'))
+    notification = Notify.Notification.new(_('Seconionis is not running'), _('Traffic is NOT routed through Tor network'))
 
   image = GdkPixbuf.Pixbuf.new_from_file(menuitem.get_parent().indicator.ICON_ENABLED)
 
