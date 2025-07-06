@@ -214,17 +214,17 @@ pref("browser.newtabpage.activity-stream.feeds.recommendationproviderswitcher", 
 lockPref("browser.newtabpage.activity-stream.feeds.section.highlights", false);
 lockPref("browser.newtabpage.activity-stream.feeds.section.topstories", false);
 pref("browser.newtabpage.activity-stream.feeds.sections", false);
-pref("browser.newtabpage.activity-stream.feeds.system.topsites", false);
+pref("browser.newtabpage.activity-stream.feeds.system.topsites", true);
 pref("browser.newtabpage.activity-stream.feeds.system.topstories", false);
 pref("browser.newtabpage.activity-stream.feeds.systemtick", false);
-pref("browser.newtabpage.activity-stream.feeds.topsites", false);
+pref("browser.newtabpage.activity-stream.feeds.topsites", true);
 pref("browser.newtabpage.activity-stream.improvesearch.handoffToAwesomebar", false);
 pref("browser.newtabpage.activity-stream.improvesearch.topSiteSearchShortcuts", false);
 pref("browser.newtabpage.activity-stream.newNewtabExperience.enabled", false);
 pref("browser.newtabpage.activity-stream.section.highlights.includeBookmarks", false);
 pref("browser.newtabpage.activity-stream.section.highlights.includeDownloads", false);
 pref("browser.newtabpage.activity-stream.section.highlights.includeVisited", false);
-pref("browser.newtabpage.activity-stream.showSearch", false);
+pref("browser.newtabpage.activity-stream.showSearch", true);
 lockPref("browser.newtabpage.activity-stream.showSponsored", false);
 lockPref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);
 // TODO do not allow plugin to start landing page

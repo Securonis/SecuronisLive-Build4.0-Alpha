@@ -218,14 +218,23 @@ def tor_router_reload(menuitem):
 def tor_router_status(menuitem):
     try:
         # Check Tor service status
-        tor_status = subprocess.check_output(['systemctl', 'is-active', 'tor'], stderr=subprocess.PIPE).decode().strip()
+        try:
+            tor_status = subprocess.check_output(['systemctl', 'is-active', 'tor'], stderr=subprocess.PIPE).decode().strip()
+        except subprocess.CalledProcessError:
+            tor_status = 'inactive'
         
         # Check Seconionis autostart service status
-        autostart_status = subprocess.check_output(['systemctl', 'is-active', 'seconionis-autostart'], stderr=subprocess.PIPE).decode().strip()
+        try:
+            autostart_status = subprocess.check_output(['systemctl', 'is-active', 'seconionis-autostart'], stderr=subprocess.PIPE).decode().strip()
+        except subprocess.CalledProcessError:
+            autostart_status = 'inactive'
         
         # Check if traffic is actually being routed through Tor
-        iptables_check = subprocess.run(['sudo', 'iptables-save'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        routing_active = 'REDIRECT' in iptables_check.stdout.decode() and str(TOR_PORT) in iptables_check.stdout.decode()
+        try:
+            iptables_check = subprocess.run(['sudo', 'iptables-save'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            routing_active = 'REDIRECT' in iptables_check.stdout.decode() and str(TOR_PORT) in iptables_check.stdout.decode()
+        except:
+            routing_active = False
 
         status_msg = f"Tor Service: {tor_status.upper()}\n"
         status_msg += f"Seconionis Service: {autostart_status.upper()}\n"
