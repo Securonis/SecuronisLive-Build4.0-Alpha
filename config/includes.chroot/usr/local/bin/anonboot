@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# anonboot - Generate a random hostname on each boot
+
+# Root check
+if [ "$EUID" -ne 0 ]; then
+    echo "Please run as root"
+    exit 1
+fi
+
+# Configuration
+PREFIX="host" # Prefix for the hostname
+CHARS="abcdefghijklmnopqrstuvwxyz" # Characters to use for random generation
+MIN_LENGTH=5 # Minimum length for random string
+MAX_LENGTH=10 # Maximum length for random string
+
+# Function to generate a random hostname
+generate_hostname() {
+    # Generate random string
+    LENGTH=$(( RANDOM % (MAX_LENGTH - MIN_LENGTH + 1) + MIN_LENGTH ))
+    RANDOM_STRING=""
+    
+    for i in $(seq 1 $LENGTH); do
+        POS=$(( RANDOM % ${#CHARS} ))
+        RANDOM_STRING="${RANDOM_STRING}${CHARS:$POS:1}"
+    done
+    
+    echo "${PREFIX}-${RANDOM_STRING}"
+}
+
+# Generate the new hostname
+NEW_HOSTNAME=$(generate_hostname)
+echo "$NEW_HOSTNAME" > /etc/hostname
+
+hostnamectl set-hostname "$NEW_HOSTNAME"
+
+echo "Hostname set to: $NEW_HOSTNAME"
+exit 0

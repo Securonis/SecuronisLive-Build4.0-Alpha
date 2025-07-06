@@ -1,0 +1,12 @@
+[Unit]
+Description=Anonboot hostname randomizer
+Before=network.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/anonboot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

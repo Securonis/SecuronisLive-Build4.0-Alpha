@@ -1,0 +1,55 @@
+#!/bin/bash
+
+SERVICE_NAME="anonboot.service"
+
+# Check for root privileges
+if [ "$EUID" -ne 0 ]; then
+    echo "Please run this script as root!"
+    exit 1
+fi
+
+while true; do
+    clear
+    echo "=== Anonboot Hostname Randomizer ==="
+    echo ""
+    echo "1) Enable the service"
+    echo "2) Disable the service"
+    echo "3) Start the service now"
+    echo "4) Stop the service now"
+    echo "5) Show service status"
+    echo "0) Exit"
+    echo ""
+    read -p "Enter your choice: " choice
+
+    case $choice in
+        1)
+            systemctl enable $SERVICE_NAME
+            echo "Service has been enabled."
+            ;;
+        2)
+            systemctl disable $SERVICE_NAME
+            echo "Service has been disabled."
+            ;;
+        3)
+            systemctl start $SERVICE_NAME
+            echo "Service has been started."
+            ;;
+        4)
+            systemctl stop $SERVICE_NAME
+            echo "Service has been stopped."
+            ;;
+        5)
+            systemctl status $SERVICE_NAME
+            ;;
+        0)
+            echo "Exiting..."
+            exit 0
+            ;;
+        *)
+            echo "Invalid choice!"
+            ;;
+    esac
+
+    echo ""
+    read -p "Press ENTER to continue..."
+done
