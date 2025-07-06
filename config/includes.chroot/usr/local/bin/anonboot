@@ -32,6 +32,19 @@ generate_hostname() {
 NEW_HOSTNAME=$(generate_hostname)
 echo "$NEW_HOSTNAME" > /etc/hostname
 
+# Update /etc/hosts file to include the new hostname
+cp /etc/hosts /etc/hosts.bak  # Backup original hosts file
+OLD_HOSTNAME=$(hostname)
+
+# Update the hosts file - replace the old hostname with the new one
+sed -i "s/127.0.1.1.*$OLD_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
+
+# If the hostname wasn't in hosts file, add it
+if ! grep -q "127.0.1.1.*$NEW_HOSTNAME" /etc/hosts; then
+    echo "127.0.1.1\t$NEW_HOSTNAME" >> /etc/hosts
+fi
+
+# Set the hostname
 hostnamectl set-hostname "$NEW_HOSTNAME"
 
 echo "Hostname set to: $NEW_HOSTNAME"
