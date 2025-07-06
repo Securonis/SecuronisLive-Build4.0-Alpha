@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# NetworkManager hook to restart seconionis when internet connection is restored
+# /etc/NetworkManager/dispatcher.d/99-restart-seconionis
+
+INTERFACE=$1
+STATUS=$2
+
+# Check if seconionis-autostart service is enabled
+if ! systemctl is-enabled seconionis-autostart &>/dev/null; then
+    exit 0
+fi
+
+# If connection is up (interface is up and online)
+if [ "$STATUS" = "up" ] || [ "$STATUS" = "connectivity-change" ]; then
+    # Check if we have actual internet connectivity by pinging cloudflare DNS
+    if ping -c 1 -W 2 1.1.1.1 &>/dev/null; then
+        logger -t "seconionis-nm-hook" "Internet connection detected, restarting seconionis"
+        # Give the network some time to fully stabilize
+        sleep 3
+        systemctl restart seconionis-autostart
+    fi
+fi
+
+exit 0

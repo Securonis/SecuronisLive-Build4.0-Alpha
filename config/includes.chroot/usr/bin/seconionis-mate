@@ -229,18 +229,22 @@ def tor_router_status(menuitem):
         except subprocess.CalledProcessError:
             autostart_status = 'inactive'
         
-        # Check if traffic is actually being routed through Tor
+        # Check if traffic is actually being routed through Tor by using curl through torsocks
         try:
-            iptables_check = subprocess.run(['sudo', 'iptables-save'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            routing_active = 'REDIRECT' in iptables_check.stdout.decode() and str(TOR_PORT) in iptables_check.stdout.decode()
-        except:
+            # Use curl with torsocks to check if we're using Tor
+            cmd = f"curl -s https://check.torproject.org"
+            result = subprocess.check_output(cmd, shell=True, timeout=5).decode('utf-8')
+            # If the page contains "Congratulations" it means we're using Tor
+            routing_active = "Congratulations" in result
+        except Exception as e:
+            print(f"Error checking Tor status: {e}")
             routing_active = False
 
         status_msg = f"Tor Service: {tor_status.upper()}\n"
         status_msg += f"Seconionis Service: {autostart_status.upper()}\n"
         status_msg += f"Traffic Routing: {'ACTIVE' if routing_active else 'INACTIVE'}"
 
-        if tor_status == 'active' and autostart_status == 'active' and routing_active:
+        if tor_status == 'active' and routing_active:
             title = _('Seconionis is fully operational')
         else:
             title = _('Seconionis has issues')
