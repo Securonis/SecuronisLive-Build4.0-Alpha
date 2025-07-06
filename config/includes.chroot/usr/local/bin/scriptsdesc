@@ -30,7 +30,6 @@ declare -A descriptions=(
   [physicalsec]="Physical security mode."
   [pxrtalcrypt]="File encryption toolkit."
   [quick-usbkitgui]="GUI tool for USB management."
-  [seconionismenu]="Advanced Tor router forcing all traffic through the Tor network."
   [securonisdnscrypt]="Script facilitating DNSCrypt usage."
   [scriptsdesc]="Script explaining the purpose of all tools."
   [systemknight]="Tool for system security scanning and management."
@@ -42,6 +41,8 @@ declare -A descriptions=(
   [usbguardmanager]="Usbguard management tool."
   [vesperacrypt]="Simple file encryption tool."
   [wizard]="Simple trace removal tool."
+  [Moneronis]="CLI Menu for Monero."
+  [anonboot-manager]="Hostname randomizer service."
 )
 
 echo "Securonis Linux Tools Descriptions"
