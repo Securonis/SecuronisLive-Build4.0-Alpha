@@ -1,14 +1,47 @@
 /* Firefox settings for Securonis Linux*/
 /* We also use policies.json to handle the default browser configuration */
 
-/*
-  Disable sending telemetry data to Mozilla's server
-*/
-// Disable check for update
+// Basic system and update settings
 lockPref("app.update.enabled", false);
 lockPref("app.update.auto", false);
 lockPref("app.update.mode", 0);
 lockPref("app.update.service.enabled", false);
+lockPref("browser.shell.checkDefaultBrowser", false);
+
+// Network and connectivity settings
+lockPref("network.captive-portal-service.enabled", false);
+lockPref("network.manage-offline-status", false);
+pref("network.proxy.autoconfig_url", "file:///etc/securonis/onion.pac");
+pref("network.proxy.socks", "127.0.0.1");
+pref("network.proxy.socks_port", 9050);
+pref("network.proxy.type", 2);
+
+// UI and theme settings
+lockPref("browser.urlbar.trimURLs", false);
+pref("browser.tabs.inTitlebar", 1);
+pref("devtools.theme", "dark");
+pref("browser.theme.toolbar-theme", 0);
+pref("extensions.activeThemeID", "firefox-compact-dark@mozilla.org");
+pref("browser.rights.3.shown", true);
+pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[],\"nav-bar\":[\"back-button\",\"forward-button\",\"home-button\",\"stop-reload-button\",\"urlbar-container\",\"save-to-pocket-button\",\"privatebrowsing-button\",\"library-button\",\"downloads-button\",\"fxa-toolbar-menu-button\",\"ublock0_raymondhill_net-browser-action\",\"developer-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"tabbrowser-tabs\",\"new-tab-button\",\"alltabs-button\"],\"PersonalToolbar\":[\"personal-bookmarks\"]},\"seen\":[\"save-to-pocket-button\",\"developer-button\",\"ublock0_raymondhill_net-browser-action\"],\"dirtyAreaCache\":[\"nav-bar\"],\"currentVersion\":17,\"newElementCount\":5}");
+
+// Extension settings
+pref("extensions.getAddons.cache.enabled", false);
+pref("extensions.htmlaboutaddons.inline-options.enabled", false);
+lockPref("browser.messaging-system.whatsNewPanel.enabled", false);
+
+// Basic privacy settings
+pref("browser.contentblocking.category", "strict");
+pref("privacy.userContext.enabled", true);
+pref("browser.contentblocking.report.monitor.enabled", false);
+pref("browser.contentblocking.report.show_mobile_app", false);
+pref("browser.contentblocking.report.vpn.enabled", false);
+pref("media.video_stats.enabled", false);
+pref("plugins.notifyMissingFlash", false);
+
+/*
+  Disable sending telemetry data to Mozilla's server
+*/
 // Disable telemetry
 lockPref("browser.newtabpage.activity-stream.feeds.telemetry", false);
 lockPref("browser.newtabpage.activity-stream.telemetry", false);
@@ -40,28 +73,13 @@ lockPref("app.normandy.enabled", false);
 lockPref("datareporting.policy.firstRunURL", "");
 lockPref("datareporting.healthreport.service.enabled", false);
 lockPref("datareporting.healthreport.uploadEnabled", false);
-// Disable network connectivity test
-lockPref("network.captive-portal-service.enabled", false);
 // Disable all data upload (Telemetry and FHR)
 lockPref("datareporting.policy.dataSubmissionEnabled", false);
-// Disable firefox monitors online / offline status
-lockPref("network.manage-offline-status", false);
-
-/*
-  Settings for extension to not send data to firefox server automatically
-*/
-// Disable add-on information. https://support.mozilla.org/en-US/kb/how-stop-firefox-making-automatic-connections
-pref("extensions.getAddons.cache.enabled", false);
-// Remove recommended add-ons
-// https://support.mozilla.org/bm/questions/1264852
-pref("extensions.htmlaboutaddons.inline-options.enabled", false);
 
 /*
   Privacy and tracking protection settings
   https://wiki.mozilla.org/Security/Tracking_protection
 */
-// Set privacy protection to maximum. In lastest test, Firefox shows Custom.
-pref("browser.contentblocking.category", "strict");
 // Force enable all other tracking protection features
 pref("privacy.trackingprotection.socialtracking.enabled", true);
 pref("privacy.trackingprotection.pbmode.enabled", true);
@@ -118,15 +136,10 @@ pref("webgl.enable-debug-renderer-info", false);
   Some interesting settings that might break UX
   License MIT @pyllyukko
 */
-// Disable video stats to reduce fingerprinting
-pref("media.video_stats.enabled", false);
 // Don't use document specified fonts to prevent installed font enumeration
 // Disable because it made google meet (and possibly some other websites) have font problem
 // Fix for users: change value to 1
 // pref("browser.display.use_document_fonts", 0);
-
-// Don't ask to install the Flash plugin
-pref("plugins.notifyMissingFlash", false);
 
 // Allow onion domains
 // Send DNS requuest through SOCKS when SOCKS proxy is in use. This might fix the complains about DNS leak when test with firefox
@@ -174,33 +187,8 @@ pref("browser.urlbar.suggest.searches", false);
 /*
   Customize layout
 */
-// Disable URL trim so protocol is forced to show
-lockPref("browser.urlbar.trimURLs", false);
-// Hide title bar to save some space
-pref("browser.tabs.inTitlebar", 1);
-// Don't show WhatsNew on first run after every update
-pref("browser.startup.homepage_override.mstone", "ignore");
-// Dark theme for devtools
-pref("devtools.theme", "dark");
-// Force firefox to use dark theme.
-pref("browser.theme.toolbar-theme", 0);
-pref("extensions.activeThemeID", "firefox-compact-dark@mozilla.org");
-// Don't show 'know your rights' on first run
-pref("browser.rights.3.shown", true);
-pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[],\"nav-bar\":[\"back-button\",\"forward-button\",\"home-button\",\"stop-reload-button\",\"urlbar-container\",\"save-to-pocket-button\",\"privatebrowsing-button\",\"library-button\",\"downloads-button\",\"fxa-toolbar-menu-button\",\"ublock0_raymondhill_net-browser-action\",\"developer-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"tabbrowser-tabs\",\"new-tab-button\",\"alltabs-button\"],\"PersonalToolbar\":[\"personal-bookmarks\"]},\"seen\":[\"save-to-pocket-button\",\"developer-button\",\"ublock0_raymondhill_net-browser-action\"],\"dirtyAreaCache\":[\"nav-bar\"],\"currentVersion\":17,\"newElementCount\":5}");
-// Set startup page
-pref("browser.startup.firstrunSkipsHomepage", true);
-pref("browser.startup.homepage", "https://duckduckgo.com/");
-pref("startup.homepage_welcome_url", "https://duckduckgo.com/");
-//pref("browser.newtabpage.activity-stream.default.sites", "#");
-//pref("browser.newtabpage.pinned", "#");
-pref("browser.startup.blankWindow", true);
-// Disable firefox's homepage. We start blank page only
-pref("browser.newtabpage.enabled", false);
-pref("browser.startup.firstrunSkipsHomepage", false);
-// Disable pocket suggestion at startup.
-lockPref("browser.messaging-system.whatsNewPanel.enabled", false);
-// pref("extensions.pocket.enabled", false); // Disable because it's not correct settings I was looking for. User might need it
+// Don't ask to install the Flash plugin
+pref("plugins.notifyMissingFlash", false);
 
 /*
   Customized new tab page. We disabled activities.
