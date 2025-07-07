@@ -254,9 +254,9 @@ def tor_router_status(menuitem):
         status_msg += f"Traffic Routing: {'ACTIVE' if routing_active else 'INACTIVE'}"
 
         if tor_status == 'active' and routing_active:
-            title = _('Seconionis is routing all traffic through Tor.')
+            title = _('Seconionis is routing all traffic through Tor')
         else:
-            title = _('Seconionis is NOT routing all traffic through Tor.')
+            title = _('Seconionis is NOT routing all traffic through Tor')
 
         notification = Notify.Notification.new(title, status_msg)
     except Exception as e:
