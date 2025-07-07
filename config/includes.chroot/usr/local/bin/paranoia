@@ -33,6 +33,10 @@ display_banner() {
 ============================================================
 This utility will implement extreme security measures that
 isolate your system from all external connections.
+============================================================
+WARNING: PLEASE STOP TOR ROUTING FIRST IF YOU ARE USING IT!
+============================================================
+
 EOF
 
     # Display current status prominently
