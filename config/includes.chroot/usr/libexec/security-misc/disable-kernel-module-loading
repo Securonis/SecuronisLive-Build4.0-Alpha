@@ -3,6 +3,10 @@
 ## Copyright (C) 2023 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
 ## See the file COPYING for copying conditions.
 
+# root0emir Note: Disabling kernel module loading during boot does improve security, but it would break Calamares and iptables. 
+# This would lead to system installation failures (at the squashfs stage) and cause Tor routing to fail. 
+# That’s why I’ve disabled it, so don’t ask why I haven’t included such a setting in Securonis.
+
 set -x
 set -e
 

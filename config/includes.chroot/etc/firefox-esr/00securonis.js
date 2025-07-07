@@ -191,12 +191,14 @@ pref("browser.urlbar.suggest.searches", false);
 pref("plugins.notifyMissingFlash", false);
 
 /*
-  Customized new tab page. Set DuckDuckGo as new tab page.
+  Browser startup and homepage settings
 */
-// Set DuckDuckGo as the new tab page
-pref("browser.newtab.url", "https://duckduckgo.com/");
+// Set DuckDuckGo as the homepage only
 pref("browser.startup.homepage", "https://duckduckgo.com/");
+pref("browser.startup.page", 1);
+// Keep new tabs as blank pages
 pref("browser.newtabpage.enabled", false);
+pref("browser.newtab.preload", false);
 
 pref("browser.newtabpage.activity-stream.section.highlights.includePocket", false);
 pref("extensions.pocket.onSaveRecs", false);
