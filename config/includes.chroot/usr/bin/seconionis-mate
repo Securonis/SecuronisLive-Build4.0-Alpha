@@ -227,7 +227,14 @@ def tor_router_status(menuitem):
         try:
             autostart_status = subprocess.check_output(['systemctl', 'is-active', 'seconionis-autostart'], stderr=subprocess.PIPE).decode().strip()
         except subprocess.CalledProcessError:
-            autostart_status = 'inactive'
+            autostart_status = 'disabled'
+            
+        # Check if the service is enabled for autostart
+        try:
+            autostart_enabled = subprocess.check_output(['systemctl', 'is-enabled', 'seconionis-autostart'], stderr=subprocess.PIPE).decode().strip()
+            # If service is enabled, just show enabled regardless of active state
+            if autostart_enabled == 'enabled':
+                autostart_status = 'enabled'
         
         # Check if traffic is actually being routed through Tor by using curl through torsocks
         try:
@@ -245,9 +252,9 @@ def tor_router_status(menuitem):
         status_msg += f"Traffic Routing: {'ACTIVE' if routing_active else 'INACTIVE'}"
 
         if tor_status == 'active' and routing_active:
-            title = _('Seconionis is fully operational')
+            title = _('Seconionis is routing all traffic through Tor.')
         else:
-            title = _('Seconionis has issues')
+            title = _('Seconionis is NOT routing all traffic through Tor.')
 
         notification = Notify.Notification.new(title, status_msg)
     except Exception as e:
