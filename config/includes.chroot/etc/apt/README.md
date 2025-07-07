@@ -1,24 +1,11 @@
 WARNING: PLEASE PAY ATTENTION!
 
-Do not add unknown or untrusted repository sources!
+# Securonis APT Notice
 
-Do not modify the /etc/apt/sources.list file!
-Making incorrect changes in this file may cause serious issues with your system.
+Securonis is configured to use the official Debian global repositories.
 
-Adding External Repositories Poses Risks to Your System:
+For security and privacy:
+- Do NOT add third-party repositories.
+- Avoid adding country-specific mirrors. Although country mirrors are technically safe, they can leave a geographical fingerprint and might sometimes lag behind the global repositories.
 
-Malicious software may be introduced.
-
-System instability may occur.
-
-Data loss may happen.
-
----------
-WARNING 
----------
-
-!!!!!!!!!!-Do not change the Trixie repositories for mirror updates!
-
->This may expose your digital fingerprint and jeopardize your privacy.
-
-!-If you value your privacy, avoid making such changes.
+The choice is yours. However, Securonis is not responsible for any errors or delays caused by using different mirrors.
