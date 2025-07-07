@@ -17,8 +17,12 @@ if [ "$STATUS" = "up" ] || [ "$STATUS" = "connectivity-change" ]; then
     if ping -c 1 -W 2 1.1.1.1 &>/dev/null; then
         logger -t "seconionis-nm-hook" "Internet connection detected, restarting seconionis"
         # Give the network some time to fully stabilize
-        sleep 3
-        systemctl restart seconionis-autostart
+        sleep 2
+        
+        # Restart seconionis directly
+        /usr/bin/seconionis restart
+        
+        logger -t "seconionis-nm-hook" "Seconionis restart completed"
     fi
 fi
 

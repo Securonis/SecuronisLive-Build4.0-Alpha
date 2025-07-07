@@ -7,8 +7,8 @@ Wants=network-online.target
 Type=simple
 ExecStart=/usr/bin/seconionis start
 ExecStop=/usr/bin/seconionis stop
-Restart=on-failure
-RestartSec=30s
+Restart=always
+RestartSec=5s
 KillMode=none
 RemainAfterExit=yes
 
