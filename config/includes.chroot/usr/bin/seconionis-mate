@@ -235,6 +235,8 @@ def tor_router_status(menuitem):
             # If service is enabled, just show enabled regardless of active state
             if autostart_enabled == 'enabled':
                 autostart_status = 'enabled'
+        except Exception:
+            pass
         
         # Check if traffic is actually being routed through Tor by using curl through torsocks
         try:
@@ -361,4 +363,4 @@ def quit(menuitem):
   gtk.main_quit()
 
 if __name__ == "__main__":
-  main()
+  main() 
