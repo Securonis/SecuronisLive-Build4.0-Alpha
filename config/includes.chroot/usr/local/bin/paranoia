@@ -124,12 +124,8 @@ enable_paranoia_mode() {
 
     echo "Enhanced firewall configured to block ALL external connections."
     
-    # Disable network interfaces
-    echo "Disabling all network interfaces..."
-    for iface in $(ip -o link show | awk -F': ' '{print $2}' | grep -v 'lo'); do
-        ip link set $iface down
-        echo "Disabled interface: $iface"
-    done
+    # We're keeping network interfaces up to avoid desktop environment issues
+    echo "Network interfaces will remain active, but all traffic is blocked by firewall"
 
     # Additional kernel hardening parameters
     cat >> /etc/sysctl.d/99-securonis-paranoia.conf << EOF
@@ -301,12 +297,8 @@ disable_paranoia_mode() {
     ip6tables -P FORWARD ACCEPT 2>/dev/null || true
     ip6tables -P OUTPUT ACCEPT 2>/dev/null || true
     
-    # Re-enable network interfaces
-    echo "Re-enabling network interfaces..."
-    for iface in $(ip -o link show | awk -F': ' '{print $2}' | grep -v 'lo'); do
-        ip link set $iface up
-        echo "Enabled interface: $iface"
-    done
+    # Network interfaces were not disabled, so no need to re-enable them
+    echo "Network interfaces are already active"
     
     # Restore kernel parameters
     echo "Restoring kernel security parameters..."
