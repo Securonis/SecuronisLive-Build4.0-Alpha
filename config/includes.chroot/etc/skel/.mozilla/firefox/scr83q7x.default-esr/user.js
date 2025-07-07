@@ -72,8 +72,8 @@ user_pref("signon.formlessCapture.enabled", false);
 user_pref("extensions.getAddons.showPane", false);
 user_pref("extensions.htmlaboutaddons.recommendations.enabled", false);
 user_pref("browser.discovery.enabled", false);
-// Enable automatic extension updates
-user_pref("app.update.auto", true);
+// Note: app.update.auto is locked as false in 00securonis.js
+// Keeping extensions update enabled but respecting system update settings
 user_pref("extensions.update.enabled", true);
 user_pref("extensions.update.autoUpdateDefault", true);
 
@@ -106,8 +106,7 @@ user_pref("security.ssl.treat_unsafe_negotiation_as_broken", true);
 user_pref("security.ssl.require_safe_negotiation", true);
 
 // ===== Privacy and Tracking Protection =====
-// First-Party Isolation
-user_pref("privacy.firstparty.isolate", true);
+// First-Party Isolation (already set in 00securonis.js)
 user_pref("privacy.firstparty.isolate.restrict_opener_access", true);
 
 // Tracking Protection
@@ -445,7 +444,7 @@ user_pref("security.csp.enable", true);                         // Enable CSP
 user_pref("security.dialog_enable_delay", 2000);                // 2 second delay for security dialogs
 
 // Additional Privacy Protections
-user_pref("privacy.firstparty.isolate.restrict_opener_access", true); // Strict first party isolation
+// privacy.firstparty.isolate.restrict_opener_access already set above
 user_pref("privacy.resistFingerprinting.letterboxing", true);    // Enable letterboxing
 user_pref("privacy.window.name.update.enabled", true);          // Clear window.name on domain change
 user_pref("privacy.clearOnShutdown.cookies", true);            // Clear cookies for usability
@@ -503,6 +502,14 @@ user_pref("extensions.webextensions.restrictedDomains", "accounts-static.cdn.moz
 // Remove security dialog delay as it's annoying
 user_pref("security.dialog_enable_delay", 0);                 // Remove delay for security dialogs
 
+// ===== Window Size and Display Settings =====
+user_pref("privacy.resistFingerprinting.letterboxing", false);  // Disable letterboxing (which can make windows small)
+user_pref("browser.window.width", 1280);                       // Set default window width
+user_pref("browser.window.height", 900);                       // Set default window height
+user_pref("browser.startup.homepage_override.mstone", "ignore"); // Disable first-run small window
+// Note: browser.tabs.inTitlebar is already set in 00securonis.js
+// user_pref("browser.tabs.inTitlebar", 1);                       // Show tabs in titlebar for more space
+
 // ===== Privacy - Clear Data on Shutdown =====
 // Consolidated clearOnShutdown settings 
 user_pref("privacy.clearOnShutdown.cache", true);            // Clear cache
@@ -532,6 +539,8 @@ user_pref("browser.cache.memory.capacity", 524288);          // 512MB memory cac
 user_pref("network.proxy.socks_remote_dns", true);              // Force DNS through SOCKS proxy
 user_pref("network.proxy.no_proxies_on", "");                   // Don't bypass proxy for any addresses
 user_pref("network.security.ports.banned", "");                 // Don't restrict any ports
+// Note: This conflicts with 00securonis.js which blocks .onion domains
+// We want to allow .onion domains for Tor compatibility
 user_pref("network.dns.blockDotOnion", false);                 // Allow .onion domains
 user_pref("dom.security.https_only_mode.onion", false);        // Don't force HTTPS for .onion addresses
 
