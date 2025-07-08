@@ -23,7 +23,6 @@ declare -A descriptions=(
   [notesgui]="Allows taking encrypted notes."
   [nuke2system]="Destroys the system irreversibly."
   [nvidia-driver-guide]="Guide for NVIDIA driver installation."
-  [openmammoth]="Powerful network defense tool."
   [onionchecker]="Graphically displays Tor onion services."
   [paranoia]="Isolates the system by blocking network and hardening kernel."
   [passmanager]="Password management tool."
