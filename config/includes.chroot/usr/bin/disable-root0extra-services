@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Disable Root0Extra services - Additional Security Hardening Services
+
+# File system protection services
+systemctl disable root0extra-fs-protected-regular.service
+
+# Network security services
+systemctl disable root0extra-network-tcp-fack.service
+systemctl disable root0extra-network-igmp-max-memberships.service
+
+# Memory protection services
+systemctl disable root0extra-kernel-page-alloc-shuffle.service
+
+echo "Root0Extra security services have been disabled. Please Reboot to apply changes."

@@ -43,6 +43,11 @@ declare -A descriptions=(
   [wizard]="Simple trace removal tool."
   [Moneronis]="CLI Menu for Monero."
   [anonboot-manager]="Hostname randomizer service."
+  [enable-root0-services]="Enable network and system hardening services.(Default: enabled)"
+  [disable-root0-services]="Disable network and system hardening services."
+  [ipv6-settings]="Root0 hardening services IPV6 settings."
+  [enable-root0extra-services]="Enable extra network and system hardening services.(Default: enabled)"
+  [disable-root0extra-services]="Disable extra network and system hardening services."
 )
 
 echo "Securonis Linux Tools Descriptions"

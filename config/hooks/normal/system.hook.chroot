@@ -74,3 +74,13 @@ systemctl enable root0-network-arp-gc-thresh1.service
 systemctl enable root0-network-arp-gc-interval.service
 systemctl enable root0-network-arp-proxy-qlen.service
 systemctl enable root0-network-arp-unres-qlen.service
+
+# File system protection services
+systemctl enable root0extra-fs-protected-regular.service
+
+# Network security services
+systemctl enable root0extra-network-tcp-fack.service
+systemctl enable root0extra-network-igmp-max-memberships.service
+
+# Memory protection services
+systemctl enable root0extra-kernel-page-alloc-shuffle.service
