@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Root0 IPv6 Settings Script
+# Simple script to check IPv6 status and enable/disable accordingly
+
+# Display menu
+clear
+echo "==========================="
+echo "   ROOT0 IPv6 SETTINGS    "
+echo "==========================="
+echo "1. Disable IPv6 Protection"
+echo "2. Enable IPv6 Protection"
+echo "3. Root0 IPv6 Status"
+echo "==========================="
+echo "Enter your choice [1-3]:"
+
+read choice
+
+# Check current IPv6 status
+check_status() {
+    all_disable=$(sysctl -n net.ipv6.conf.all.disable_ipv6 2>/dev/null)
+    if [ "$all_disable" == "1" ]; then
+        echo "IPv6 Status: DISABLED (Protection Active)"
+        echo "Root0 IPv6 Service Status:"
+        systemctl status root0-network-ipv6-disable.service --no-pager | grep "Active:"
+    else
+        echo "IPv6 Status: ENABLED (Protection Inactive)"
+        echo "Root0 IPv6 Service Status:"
+        systemctl status root0-network-ipv6-disable.service --no-pager | grep "Active:"
+    fi
+}
+
+case $choice in
+    1)
+        echo "Disabling IPv6..."
+        systemctl enable root0-network-ipv6-disable.service
+        systemctl start root0-network-ipv6-disable.service
+        echo "IPv6 Protection enabled. Please Reboot to apply changes."
+        check_status
+        ;;
+    2)
+        echo "Enabling IPv6..."
+        systemctl disable root0-network-ipv6-disable.service
+        systemctl stop root0-network-ipv6-disable.service
+        echo "IPv6 Protection disabled. Please Reboot to apply changes."
+        check_status
+        ;;
+    3)
+        check_status
+        ;;
+    *)
+        echo "Invalid option."
+        exit 1
+        ;;
+esac
+
