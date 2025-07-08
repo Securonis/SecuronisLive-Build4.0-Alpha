@@ -339,9 +339,9 @@ def dialog_about(menuitem):
   about_dialog.set_logo(GdkPixbuf.Pixbuf.new_from_file(menuitem.get_parent().indicator.APP_ICON).scale_simple(48, 48, GdkPixbuf.InterpType.BILINEAR))
 
   about_dialog.set_program_name(_('Seconionis'))
-  about_dialog.set_version("1.0")
+  about_dialog.set_version("2.0")
   about_dialog.set_authors(["root0emir"])
-  about_dialog.set_license("GNU General Public License v3.0\n\nThis program is free software...")
+  about_dialog.set_license("GNU General Public License v3.0\n\nThis program is free software.")
   about_dialog.set_website("https://securonis.github.io")
   about_dialog.set_comments(_('This indicator allows you to manage TOR routing system-wide.'))
 
